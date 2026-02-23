@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  html,
+  body {
+    @apply m-0 p-0;
+  }
+
+  body {
+    @apply min-h-screen bg-[radial-gradient(circle_at_15%_20%,#fefefe_0%,#f3f5f9_48%,#ecf0f7_100%)] text-slate-800;
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+
+  #print-root {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+}

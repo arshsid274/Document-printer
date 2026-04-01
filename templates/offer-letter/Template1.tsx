@@ -224,6 +224,9 @@ export default function Template1({ data }: OfferLetterTemplateProps) {
           <p className="mb-0 mt-1 text-[0.67rem] leading-[1.4] text-[#3a3a3a]">
             CIN: U01692GJ2016PLC092865 | www.apexltd.in
           </p>
+          <p className="mt-2 m-0 text-[0.85rem] font-bold text-[#111]">
+            Thoduparamban House, Vallakkunnu, P. O. Kallettumkara
+          </p>
           <div className="mt-2.5 flex w-full items-center justify-between">
             <span className="block h-[8px] w-[23mm] bg-[#4cbadf]" />
             <span className="block h-[8px] w-[23mm] bg-[#4cbadf]" />

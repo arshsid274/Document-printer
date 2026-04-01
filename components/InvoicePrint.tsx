@@ -23,9 +23,6 @@ export default function InvoicePrint({ children }: InvoicePrintProps) {
         margin: 0;
         padding: 0;
         width: 100%;
-      }
-
-      body {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -35,8 +32,6 @@ export default function InvoicePrint({ children }: InvoicePrintProps) {
         max-width: 190mm;
         margin: 0 auto;
         box-sizing: border-box;
-        page-break-inside: avoid;
-        break-inside: avoid-page;
       }
 
       #print-root > * {
@@ -63,12 +58,12 @@ export default function InvoicePrint({ children }: InvoicePrintProps) {
         </button>
       </div>
 
-      <div
-        ref={printRef}
-        id="print-root"
-        className="mx-auto w-full max-w-[190mm] overflow-hidden rounded-md bg-white shadow-[0_16px_30px_rgba(17,32,61,0.12)] max-[700px]:max-w-full"
-      >
-        {children}
+      {/* Visual wrapper (screen only): overflow-hidden clips corners on screen */}
+      <div className="mx-auto w-full max-w-[190mm] overflow-hidden rounded-md bg-white shadow-[0_16px_30px_rgba(17,32,61,0.12)] max-[700px]:max-w-full">
+        {/* Print target: no overflow-hidden so footer bar is never clipped */}
+        <div ref={printRef} id="print-root">
+          {children}
+        </div>
       </div>
     </div>
   );

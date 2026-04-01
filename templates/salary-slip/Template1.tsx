@@ -1,4 +1,6 @@
+import React from "react";
 import { SalarySlipData } from "../../data/mockData";
+import { DatcoDocHeader, DatcoFooterBar } from "../shared/DatcoComponents";
 
 interface SalarySlipTemplate1Props {
   data: SalarySlipData;
@@ -74,8 +76,7 @@ function formatPaySlipMonth(value: string): string {
   }
 
   const monthName = new Intl.DateTimeFormat("en-GB", { month: "long" }).format(parsed);
-  const shortYear = `${parsed.getFullYear()}`.slice(-2);
-  return `${monthName}-${shortYear}`;
+  return `${monthName}-${parsed.getFullYear()}`;
 }
 
 function getDaysInMonth(value: string): number {
@@ -85,6 +86,19 @@ function getDaysInMonth(value: string): number {
   }
 
   return new Date(parsed.getFullYear(), parsed.getMonth() + 1, 0).getDate();
+}
+
+function getWorkingDaysInMonth(value: string): number {
+  const parsed = parseMonthValue(value);
+  if (!parsed) return 26;
+  const year = parsed.getFullYear();
+  const month = parsed.getMonth();
+  const totalDays = new Date(year, month + 1, 0).getDate();
+  let sundays = 0;
+  for (let d = 1; d <= totalDays; d++) {
+    if (new Date(year, month, d).getDay() === 0) sundays++;
+  }
+  return totalDays - sundays;
 }
 
 function twoDigitsToWords(value: number): string {
@@ -141,167 +155,244 @@ function titleCase(value: string): string {
     .join(" ");
 }
 
-export default function Template1({ data }: SalarySlipTemplate1Props) {
+// ─── identical data from BatchTemplate ───────────────────────────────────────
+const BASE: Omit<SalarySlipData, "month" | "workingDays" | "deductions"> = {
+  companyName: "DATCO CIVIL",
+  employeeName: "Anderson Varghese",
+  employeeId: "EMP-0988",
+  basicSalary: 7500,
+  allowances: 7500,
+  issueDate: "",
+  panNumber: "BWUPA3029E",
+  principalEmployer: "",
+  engagedThrough: "M/s. DATCO CIVIL",
+  projectName: "Khatan WSS Project :LE 200816",
+  designation: "Fire & Safety Officer",
+  rateOfWorkmen: 576.92,
+  bankName: "Bank Of Baroda",
+  accountNo: "52148100008038",
+  pfAccountNo: "NA",
+  uanNo: "101619878937",
+  hra: 3000,
+  transportAllowance: 1600,
+  medicalAllowance: 2900,
+  pfDeduction: 0,
+  esiDeduction: 0,
+  tdsDeduction: 0,
+  professionalTax: 0,
+  companyEmail: "davisvibin@gmail.com",
+};
+
+const SLIPS = [
+  { month: "2021-07", lwp: 0 },
+  { month: "2021-09", lwp: 2 },
+  { month: "2021-11", lwp: 0 },
+  { month: "2022-02", lwp: 3 },
+  { month: "2022-06", lwp: 0 },
+  { month: "2022-10", lwp: 0 },
+  { month: "2024-04", lwp: 0 },
+  { month: "2024-08", lwp: 0 },
+  { month: "2024-11", lwp: 1 },
+];
+
+function calendarDays(month: string): number {
+  const [year, m] = month.split("-").map(Number);
+  return new Date(year, m, 0).getDate();
+}
+
+function lwpAmount(lwpDays: number, month: string): number {
+  return Math.round((15000 / calendarDays(month)) * lwpDays);
+}
+
+// ─── single page renderer ─────────────────────────────────────────────────────
+function SlipPage({ data, pageBreak }: { data: SalarySlipData; pageBreak: boolean }) {
   const basicSalary = Math.max(0, toNumber(data.basicSalary));
   const hra = Math.max(0, toNumber(data.hra));
   const transportAllowance = Math.max(0, toNumber(data.transportAllowance));
-  const medicalAllowance = Math.max(0, toNumber(data.medicalAllowance));
+  const specialAllowance = Math.max(0, toNumber(data.medicalAllowance));
 
   const pfDeduction = Math.max(0, toNumber(data.pfDeduction));
   const esiDeduction = Math.max(0, toNumber(data.esiDeduction));
   const tdsDeduction = Math.max(0, toNumber(data.tdsDeduction));
   const professionalTax = Math.max(0, toNumber(data.professionalTax));
 
-  const totalEarnings = basicSalary + hra + transportAllowance + medicalAllowance;
-  const totalDeductions = pfDeduction + esiDeduction + tdsDeduction + professionalTax;
+  const lwpDeduction = Math.max(0, toNumber(data.deductions));
+
+  const totalEarnings = basicSalary + hra + transportAllowance + specialAllowance;
+  const medicalInsuranceDeduction = 600;
+  const totalDeductions = pfDeduction + esiDeduction + tdsDeduction + professionalTax + medicalInsuranceDeduction + lwpDeduction;
   const netPay = Math.max(0, totalEarnings - totalDeductions);
   const netPayInWords = `${titleCase(numberToWordsIndian(Math.round(netPay)))} Only`;
 
-  const workingDays = Math.max(0, Math.round(toNumber(data.workingDays, getDaysInMonth(data.month))));
+  const totalDays = getDaysInMonth(data.month);
+  const lwpDays = totalDays > 0 && lwpDeduction > 0 ? Math.round(lwpDeduction * totalDays / 15000) : 0;
+  const workingDays = totalDays - lwpDays;
   const paySlipMonth = formatPaySlipMonth(data.month);
-  const rateOfWorkmen = toNumber(data.rateOfWorkmen);
+  const rateOfWorkmen = totalEarnings / 26;
 
   const employeeRows = [
     { label: "Employee Name", value: `${data.employeeName}` },
+    { label: "Employee ID", value: `${data.employeeId}` },
     { label: "Project Name", value: `${data.projectName}` },
     { label: "Designation", value: `${data.designation}` },
     { label: "Rate of Workmen", value: `${currencyWithDecimals.format(rateOfWorkmen)}` },
     { label: "Bank Name", value: `${data.bankName}` },
     { label: "Account No", value: `${data.accountNo}` },
-    { label: "PF A/C No", value: `${data.pfAccountNo}` },
-    { label: "UAN No", value: `${data.uanNo}` }
+    { label: "LWP Days", value: lwpDays > 0 ? `${lwpDays} Day${lwpDays !== 1 ? "s" : ""}` : "0" }
   ];
 
   const payrollRows = [
-    {
-      earningsLabel: "Basic Salary",
-      earningsAmount: basicSalary,
-      deductionLabel: "PF",
-      deductionAmount: pfDeduction
-    },
-    {
-      earningsLabel: "HRA",
-      earningsAmount: hra,
-      deductionLabel: "ESI",
-      deductionAmount: esiDeduction
-    },
-    {
-      earningsLabel: "Transport Allowances",
-      earningsAmount: transportAllowance,
-      deductionLabel: "TDS",
-      deductionAmount: tdsDeduction
-    },
-    {
-      earningsLabel: "Medical",
-      earningsAmount: medicalAllowance,
-      deductionLabel: "Professional Tax",
-      deductionAmount: professionalTax
-    }
+    { earningsLabel: "Basic Salary", earningsAmount: basicSalary, deductionLabel: "Medical Insurance", deductionAmount: medicalInsuranceDeduction },
+    { earningsLabel: "HRA", earningsAmount: hra, deductionLabel: "LWP Days", deductionAmount: lwpDeduction },
+    { earningsLabel: "Transport Allowances", earningsAmount: transportAllowance, deductionLabel: "TDS", deductionAmount: tdsDeduction },
+    { earningsLabel: "Special Allowance", earningsAmount: specialAllowance, deductionLabel: "Other Deductions", deductionAmount: 0 }
   ];
 
+  const pageStyle: React.CSSProperties = {
+    fontFamily: "Arial, Helvetica, sans-serif",
+    color: "#111111",
+    width: "100%",
+    minHeight: "297mm",
+    boxSizing: "border-box",
+    padding: 0,
+    display: "flex",
+    flexDirection: "column",
+    background: "#fff",
+    breakBefore: pageBreak ? "page" : "auto",
+  };
+
+  const innerPad: React.CSSProperties = {
+    padding: "6mm 12mm 4mm",
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+  };
+
   return (
-    <article
-      className="min-h-[257mm] bg-white px-[12mm] pb-[8mm] pt-[8mm] text-black"
-      style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
-    >
-      <header className="text-center">
-        <img
-          src="/images/logos/datco-header.svg"
-          alt="DATCO CIVIL Header"
-          className="mx-auto h-auto w-full max-w-[165mm] object-contain"
-        />
-      </header>
+    <div style={pageStyle}>
+      <div style={innerPad}>
+        <DatcoDocHeader />
 
-      <main className="mx-auto mt-[8mm] max-w-[160mm] text-[0.9rem]">
-        <h2 className="m-0 text-center text-[1.35rem] font-bold underline">PAY SLIP</h2>
+        <div style={{ marginTop: "4mm", fontSize: "0.85rem", flex: 1 }}>
+          <h2 style={{ margin: 0, textAlign: "center", fontSize: "1.1rem", fontWeight: "bold", textDecoration: "underline" }}>PAY SLIP</h2>
 
-        <section className="mt-[8mm] text-[0.95rem]">
-          <p className="m-0 font-bold">PAN No-{data.panNumber}</p>
-          <p className="mt-[3mm]">{data.principalEmployer}</p>
-          <p className="mt-[2.5mm]">Engage Through {data.engagedThrough}</p>
-        </section>
+          <section style={{ marginTop: "3mm", fontSize: "0.85rem" }}>
+            <p style={{ margin: 0, fontWeight: "bold" }}>PAN No-{data.panNumber}</p>
+            {data.principalEmployer && <p style={{ marginTop: "1.5mm" }}>{data.principalEmployer}</p>}
+            <p style={{ marginTop: "1.5mm" }}>{data.engagedThrough}</p>
+          </section>
 
-        <section className="mt-[4mm]">
-          <table className="w-full border-collapse text-[0.92rem]">
-            <tbody>
-              <tr>
-                <td className="border border-black px-2.5 py-1.5">Working Days: {workingDays} Days</td>
-                <td className="border border-black px-2.5 py-1.5 text-right">Pay Slip Month: {paySlipMonth}</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section className="mt-[8mm]">
-          <table className="w-full border-collapse text-[0.9rem]">
-            <tbody>
-              {employeeRows.map((row) => (
-                <tr key={row.label}>
-                  <th className="w-1/2 border border-black px-2.5 py-1.5 text-center font-bold">
-                    {row.label}
-                  </th>
-                  <td className="w-1/2 border border-black px-2.5 py-1.5 text-center">{row.value}</td>
+          <section style={{ marginTop: "2.5mm" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+              <tbody>
+                <tr>
+                  <td style={{ border: "1px solid #000", padding: "4px 8px" }}>Working Days: {workingDays} Days</td>
+                  <td style={{ border: "1px solid #000", padding: "4px 8px", textAlign: "right" }}>Pay Slip Month: {paySlipMonth}</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
+              </tbody>
+            </table>
+          </section>
 
-        <section className="mt-[5mm]">
-          <table className="w-full border-collapse text-[0.9rem]">
-            <thead>
-              <tr>
-                <th className="w-1/4 border border-black px-2.5 py-1.5 text-center font-bold">Earnings</th>
-                <th className="w-1/4 border border-black px-2.5 py-1.5 text-center font-bold">Amount</th>
-                <th className="w-1/4 border border-black px-2.5 py-1.5 text-center font-bold">Deductions</th>
-                <th className="w-1/4 border border-black px-2.5 py-1.5 text-center font-bold">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {payrollRows.map((row) => (
-                <tr key={row.earningsLabel}>
-                  <th className="border border-black px-2.5 py-1.5 text-left font-bold">{row.earningsLabel}</th>
-                  <td className="border border-black px-2.5 py-1.5 text-center">
-                    {amountFormat.format(row.earningsAmount)}
+          <section style={{ marginTop: "3mm" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+              <tbody>
+                {employeeRows.map((row) => (
+                  <tr key={row.label}>
+                    <th style={{ width: "50%", border: "1px solid #000", padding: "4px 8px", textAlign: "center", fontWeight: "bold" }}>
+                      {row.label}
+                    </th>
+                    <td style={{ width: "50%", border: "1px solid #000", padding: "4px 8px", textAlign: "center" }}>{row.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
+
+          <section style={{ marginTop: "3mm" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+              <thead>
+                <tr>
+                  <th style={{ width: "25%", border: "1px solid #000", padding: "4px 8px", textAlign: "center", fontWeight: "bold" }}>Earnings</th>
+                  <th style={{ width: "25%", border: "1px solid #000", padding: "4px 8px", textAlign: "center", fontWeight: "bold" }}>Amount</th>
+                  <th style={{ width: "25%", border: "1px solid #000", padding: "4px 8px", textAlign: "center", fontWeight: "bold" }}>Deductions</th>
+                  <th style={{ width: "25%", border: "1px solid #000", padding: "4px 8px", textAlign: "center", fontWeight: "bold" }}>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {payrollRows.map((row) => (
+                  <tr key={row.earningsLabel}>
+                    <th style={{ border: "1px solid #000", padding: "4px 8px", textAlign: "left", fontWeight: "bold" }}>{row.earningsLabel}</th>
+                    <td style={{ border: "1px solid #000", padding: "4px 8px", textAlign: "center" }}>
+                      {amountFormat.format(row.earningsAmount)}
+                    </td>
+                    <th style={{ border: "1px solid #000", padding: "4px 8px", textAlign: "center", fontWeight: "bold" }}>{row.deductionLabel}</th>
+                    <td style={{ border: "1px solid #000", padding: "4px 8px", textAlign: "center" }}>
+                      {amountFormat.format(row.deductionAmount)}
+                    </td>
+                  </tr>
+                ))}
+                <tr>
+                  <th style={{ border: "1px solid #000", padding: "4px 8px", textAlign: "center", fontWeight: "bold" }}>Total Earnings</th>
+                  <td style={{ border: "1px solid #000", padding: "4px 8px", textAlign: "center", fontWeight: "bold" }}>
+                    {amountFormat.format(totalEarnings)}
                   </td>
-                  <th className="border border-black px-2.5 py-1.5 text-center font-bold">{row.deductionLabel}</th>
-                  <td className="border border-black px-2.5 py-1.5 text-center">
-                    {amountFormat.format(row.deductionAmount)}
+                  <th style={{ border: "1px solid #000", padding: "4px 8px", textAlign: "center", fontWeight: "bold" }}>Total Deductions</th>
+                  <td style={{ border: "1px solid #000", padding: "4px 8px", textAlign: "center", fontWeight: "bold" }}>
+                    {amountFormat.format(totalDeductions)}
                   </td>
                 </tr>
-              ))}
-              <tr>
-                <th className="border border-black px-2.5 py-1.5 text-center font-bold">Total Earnings</th>
-                <td className="border border-black px-2.5 py-1.5 text-center font-bold">
-                  {amountFormat.format(totalEarnings)}
-                </td>
-                <th className="border border-black px-2.5 py-1.5 text-center font-bold">Total Deductions</th>
-                <td className="border border-black px-2.5 py-1.5 text-center font-bold">
-                  {amountFormat.format(totalDeductions)}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
+              </tbody>
+            </table>
+          </section>
 
-        <section>
-          <table className="w-full border-collapse text-[0.95rem]">
-            <tbody>
-              <tr>
-                <th className="w-1/2 border border-black px-2.5 py-1.5 text-left font-bold">Net Pay</th>
-                <td className="w-1/2 border border-black px-2.5 py-1.5 text-right font-bold">
-                  {currencyFormat.format(netPay)}
-                </td>
-              </tr>
-              <tr>
-                <th className="border border-black px-2.5 py-1.5 text-left font-bold">In Words</th>
-                <td className="border border-black px-2.5 py-1.5 font-bold">{netPayInWords}</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
+          <section>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+              <tbody>
+                <tr>
+                  <th style={{ width: "50%", border: "1px solid #000", padding: "4px 8px", textAlign: "left", fontWeight: "bold" }}>Net Pay</th>
+                  <td style={{ width: "50%", border: "1px solid #000", padding: "4px 8px", textAlign: "right", fontWeight: "bold" }}>
+                    {currencyFormat.format(netPay)}
+                  </td>
+                </tr>
+                <tr>
+                  <th style={{ border: "1px solid #000", padding: "4px 8px", textAlign: "left", fontWeight: "bold" }}>In Words</th>
+                  <td style={{ border: "1px solid #000", padding: "4px 8px", fontWeight: "bold" }}>{netPayInWords}</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
 
-      </main>
-    </article>
+          <section style={{ marginTop: "auto", paddingTop: "5mm", textAlign: "right" }}>
+            <p style={{ fontWeight: "bold", margin: 0 }}>For DATCO CIVIL</p>
+            <img
+              src="/images/logos/signatur2.png"
+              alt="Authorised Signatory Signature"
+              style={{ marginLeft: "auto", height: "auto", width: "100%", maxWidth: "30mm", objectFit: "contain", display: "block" }}
+            />
+            <p style={{ fontWeight: "bold", margin: 0 }}>Authorised Signatory</p>
+            <p style={{ margin: 0 }}>Human Resources Department</p>
+          </section>
+        </div>
+      </div>
+
+      <DatcoFooterBar />
+    </div>
+  );
+}
+
+export default function Template1({ data: _ }: SalarySlipTemplate1Props) {
+  return (
+    <div style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
+      {SLIPS.map((s, i) => {
+        const deductions = lwpAmount(s.lwp, s.month);
+        const slipData: SalarySlipData = {
+          ...BASE,
+          month: s.month,
+          workingDays: calendarDays(s.month),
+          deductions,
+        };
+        return <SlipPage key={s.month} data={slipData} pageBreak={i > 0} />;
+      })}
+    </div>
   );
 }

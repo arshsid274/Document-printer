@@ -18,13 +18,17 @@ import {
 import BankStatementTemplate1 from "../templates/bank-statement/Template1";
 import OfferLetterTemplate1 from "../templates/offer-letter/Template1";
 import OfferLetterTemplate2 from "../templates/offer-letter/Template2";
+import OfferLetterTemplate3 from "../templates/offer-letter/Template3";
 import RelievingLetterTemplate1 from "../templates/relieving-letter/Template1";
+import RolesResponsibilityTemplate1 from "../templates/roles-responsibility/Template1";
+import BillTemplate1 from "../templates/bill/Template1";
 import SalarySlipTemplate1 from "../templates/salary-slip/Template1";
 import SalarySlipTemplate2 from "../templates/salary-slip/Template2";
+import SalarySlipBatchTemplate from "../templates/salary-slip/BatchTemplate";
 import MicrosoftSalesChatTemplate1 from "../templates/microsoft-sales-chat/Template1";
 
 type EditableDocumentValues = Record<string, string | number>;
-const FORM_DATA_STORAGE_KEY = "document-printer.formData.v1";
+const FORM_DATA_STORAGE_KEY = "document-printer.formData.v11";
 const TEMPLATE_STORAGE_KEY = "document-printer.templateSelection.v1";
 const ACTIVE_DOCUMENT_STORAGE_KEY = "document-printer.activeDocument.v1";
 
@@ -38,7 +42,9 @@ function mergeFormDataWithDefaults(rawValue: unknown): DocumentDataMap {
     "offer-letter": { ...mockData["offer-letter"] },
     "relieving-letter": { ...mockData["relieving-letter"] },
     "bank-statement": { ...mockData["bank-statement"] },
-    "microsoft-sales-chat": { ...mockData["microsoft-sales-chat"] }
+    "roles-responsibility": { ...mockData["roles-responsibility"] },
+    "microsoft-sales-chat": { ...mockData["microsoft-sales-chat"] },
+    "bill": { ...mockData["bill"] }
   };
 
   if (!isObjectRecord(rawValue)) {
@@ -168,6 +174,9 @@ export default function HomePage() {
       if (activeTemplate === "template2") {
         return <SalarySlipTemplate2 data={formDataByDocument["salary-slip"]} />;
       }
+      if (activeTemplate === "template3") {
+        return <SalarySlipBatchTemplate data={formDataByDocument["salary-slip"]} />;
+      }
       return <SalarySlipTemplate1 data={formDataByDocument["salary-slip"]} />;
     }
 
@@ -175,11 +184,22 @@ export default function HomePage() {
       if (activeTemplate === "template2") {
         return <OfferLetterTemplate2 data={formDataByDocument["offer-letter"]} />;
       }
+      if (activeTemplate === "template3") {
+        return <OfferLetterTemplate3 data={formDataByDocument["offer-letter"]} />;
+      }
       return <OfferLetterTemplate1 data={formDataByDocument["offer-letter"]} />;
+    }
+
+    if (selectedDocument === "roles-responsibility") {
+      return <RolesResponsibilityTemplate1 data={formDataByDocument["roles-responsibility"]} />;
     }
 
     if (selectedDocument === "relieving-letter") {
       return <RelievingLetterTemplate1 data={formDataByDocument["relieving-letter"]} />;
+    }
+
+    if (selectedDocument === "bill") {
+      return <BillTemplate1 data={formDataByDocument["bill"]} />;
     }
 
     if (selectedDocument === "microsoft-sales-chat") {
@@ -220,7 +240,11 @@ export default function HomePage() {
 
         <section className="p-6 max-[700px]:p-3.5">
           <PreviewPanel>
-            <InvoicePrint>{templatePreview}</InvoicePrint>
+            {selectedDocument === "salary-slip" && activeTemplate === "template3" ? (
+              templatePreview
+            ) : (
+              <InvoicePrint>{templatePreview}</InvoicePrint>
+            )}
           </PreviewPanel>
         </section>
       </main>

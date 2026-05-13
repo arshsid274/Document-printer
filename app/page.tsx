@@ -22,6 +22,7 @@ import OfferLetterTemplate3 from "../templates/offer-letter/Template3";
 import RelievingLetterTemplate1 from "../templates/relieving-letter/Template1";
 import RolesResponsibilityTemplate1 from "../templates/roles-responsibility/Template1";
 import BillTemplate1 from "../templates/bill/Template1";
+import ContractTemplate1 from "../templates/contract/Template1";
 import SalarySlipTemplate1 from "../templates/salary-slip/Template1";
 import SalarySlipTemplate2 from "../templates/salary-slip/Template2";
 import SalarySlipBatchTemplate from "../templates/salary-slip/BatchTemplate";
@@ -44,7 +45,8 @@ function mergeFormDataWithDefaults(rawValue: unknown): DocumentDataMap {
     "bank-statement": { ...mockData["bank-statement"] },
     "roles-responsibility": { ...mockData["roles-responsibility"] },
     "microsoft-sales-chat": { ...mockData["microsoft-sales-chat"] },
-    "bill": { ...mockData["bill"] }
+    "bill": { ...mockData["bill"] },
+    "contract": { ...mockData["contract"] }
   };
 
   if (!isObjectRecord(rawValue)) {
@@ -200,6 +202,10 @@ export default function HomePage() {
 
     if (selectedDocument === "bill") {
       return <BillTemplate1 data={formDataByDocument["bill"]} />;
+    }
+
+    if (selectedDocument === "contract") {
+      return <ContractTemplate1 data={formDataByDocument["contract"]} />;
     }
 
     if (selectedDocument === "microsoft-sales-chat") {

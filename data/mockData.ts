@@ -138,6 +138,40 @@ export interface RolesResponsibilityData {
   employeeId: string;
 }
 
+export interface ContractData {
+  [key: string]: string | number;
+  letterDate: string;
+  letterRef: string;
+  toCompany: string;
+  toAddressLine1: string;
+  toAddressLine2: string;
+  toAddressLine3: string;
+  attentionName: string;
+  attentionTitle: string;
+  projectName: string;
+  contractNumber: string;
+  contractTitle: string;
+  proposalRef: string;
+  proposalDate: string;
+  employerName: string;
+  employerShortName: string;
+  contractorName: string;
+  lumpSumPrice: number;
+  lumpSumPriceWords: string;
+  supplyPrice: number;
+  installPrice: number;
+  commencementDate: string;
+  completionDate: string;
+  handoverDate: string;
+  acknowledgementEmail: string;
+  acknowledgementAttn: string;
+  employerSignatoryName: string;
+  employerSignatoryTitle: string;
+  employerCompany: string;
+  contractorSignatoryName: string;
+  contractorSignatoryTitle: string;
+}
+
 export interface DocumentDataMap {
   "salary-slip": SalarySlipData;
   "offer-letter": OfferLetterData;
@@ -146,6 +180,7 @@ export interface DocumentDataMap {
   "microsoft-sales-chat": MicrosoftSalesChatData;
   "roles-responsibility": RolesResponsibilityData;
   "bill": BillData;
+  "contract": ContractData;
 }
 
 export type DocumentType = keyof DocumentDataMap;
@@ -174,6 +209,7 @@ export const documentOptions: SidebarOption[] = [
   { id: "salary-slip", label: "Salary Slip" },
   { id: "bank-statement", label: "Bank Statement" },
   { id: "roles-responsibility", label: "Roles & Responsibility" },
+  { id: "contract", label: "Contract" },
   { id: "bill", label: "Bill" },
   { id: "microsoft-sales-chat", label: "Microsoft Sales Chat" }
 ];
@@ -193,7 +229,8 @@ export const templateRegistry: Record<DocumentType, TemplateMeta[]> = {
   "bank-statement": [{ id: "template1", label: "Template 1" }],
   "roles-responsibility": [{ id: "template1", label: "Template 1" }],
   "microsoft-sales-chat": [{ id: "template1", label: "Template 1" }],
-  "bill": [{ id: "template1", label: "Template 1" }]
+  "bill": [{ id: "template1", label: "Template 1" }],
+  "contract": [{ id: "template1", label: "Template 1" }]
 };
 
 export const defaultTemplateSelection: Record<DocumentType, string> = {
@@ -203,7 +240,8 @@ export const defaultTemplateSelection: Record<DocumentType, string> = {
   "bank-statement": "template1",
   "roles-responsibility": "template1",
   "microsoft-sales-chat": "template1",
-  "bill": "template1"
+  "bill": "template1",
+  "contract": "template1"
 };
 
 export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
@@ -331,6 +369,38 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     { key: "item5Qty", label: "Item 5 Qty", type: "number" },
     { key: "item5Price", label: "Item 5 Price", type: "number" },
     { key: "cashReceived", label: "Cash Received (AED)", type: "number" }
+  ],
+  "contract": [
+    { key: "letterDate", label: "Letter Date", type: "date" },
+    { key: "letterRef", label: "Reference No.", type: "text" },
+    { key: "toCompany", label: "To: Company", type: "text" },
+    { key: "toAddressLine1", label: "To: Address Line 1", type: "text" },
+    { key: "toAddressLine2", label: "To: Address Line 2", type: "text" },
+    { key: "toAddressLine3", label: "To: Address Line 3", type: "text" },
+    { key: "attentionName", label: "Attention: Name", type: "text" },
+    { key: "attentionTitle", label: "Attention: Title", type: "text" },
+    { key: "projectName", label: "Project", type: "text" },
+    { key: "contractNumber", label: "Contract No.", type: "text" },
+    { key: "contractTitle", label: "Contract Title", type: "text" },
+    { key: "proposalRef", label: "Proposal Ref.", type: "text" },
+    { key: "proposalDate", label: "Proposal Date (dd.mm.yyyy)", type: "text" },
+    { key: "employerName", label: "Employer (full legal name)", type: "text" },
+    { key: "employerShortName", label: "Employer (short)", type: "text" },
+    { key: "contractorName", label: "Contractor", type: "text" },
+    { key: "lumpSumPrice", label: "Lump Sum Price (€)", type: "number" },
+    { key: "lumpSumPriceWords", label: "Lump Sum Price (in words)", type: "text" },
+    { key: "supplyPrice", label: "Supply Price (€)", type: "number" },
+    { key: "installPrice", label: "Install/Test/Commission (€)", type: "number" },
+    { key: "commencementDate", label: "Commencement Date", type: "date" },
+    { key: "completionDate", label: "Time for Completion", type: "date" },
+    { key: "handoverDate", label: "Final Handover Date", type: "date" },
+    { key: "acknowledgementEmail", label: "Acknowledgement Email", type: "text" },
+    { key: "acknowledgementAttn", label: "Acknowledgement Attn.", type: "text" },
+    { key: "employerSignatoryName", label: "Employer Signatory Name", type: "text" },
+    { key: "employerSignatoryTitle", label: "Employer Signatory Title", type: "text" },
+    { key: "employerCompany", label: "Employer Company (signature)", type: "text" },
+    { key: "contractorSignatoryName", label: "Contractor Signatory Name", type: "text" },
+    { key: "contractorSignatoryTitle", label: "Contractor Signatory Title", type: "text" }
   ]
 };
 
@@ -459,5 +529,37 @@ export const mockData: DocumentDataMap = {
     item5Qty: 1,
     item5Price: 30.00,
     cashReceived: 100.00
+  },
+  "contract": {
+    letterDate: "",
+    letterRef: "GBC/MGT/LOA/26/0113",
+    toCompany: "Midline General Trading Fze",
+    toAddressLine1: "Plot no 11009 S11010,",
+    toAddressLine2: "Building no S110 4333,",
+    toAddressLine3: "United Arab Emirates",
+    attentionName: "Mr. Essay Bousayf",
+    attentionTitle: "General Manager",
+    projectName: "New Benghazi International Airport, Libya",
+    contractNumber: "BIA/PSR/049/2026",
+    contractTitle: "Supply, Installation, Testing and Commissioning of Primary Surveillance Radar (PSR), Secondary Surveillance Radar (MSSR), and DVOR/DME Systems at New Benghazi International Airport, Libya.",
+    proposalRef: "MID160126/0104",
+    proposalDate: "16.02.2026",
+    employerName: "Global Builders Construction Limited Libya [GBC]",
+    employerShortName: "GBC",
+    contractorName: "Midline General Trading FZE",
+    lumpSumPrice: 13087729.22,
+    lumpSumPriceWords: "Euro Thirteen Million Eighty Seven Thousand Seven Hundred Twenty Nine and Twenty Two Cents Only",
+    supplyPrice: 11300000,
+    installPrice: 1787729.22,
+    commencementDate: "2026-06-06",
+    completionDate: "2027-01-31",
+    handoverDate: "2027-03-31",
+    acknowledgementEmail: "procurement01@globalbuilders.ae",
+    acknowledgementAttn: "Mohamed Al Khyeli",
+    employerSignatoryName: "Mohamed Al Khyeli",
+    employerSignatoryTitle: "Chairman",
+    employerCompany: "Global Builders Construction Limited",
+    contractorSignatoryName: "Mr. Essay Bousayf",
+    contractorSignatoryTitle: "General Manager"
   }
 };

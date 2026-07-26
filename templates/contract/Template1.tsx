@@ -485,8 +485,8 @@ export default function Template1({ data }: ContractTemplateProps) {
               <td style={tableCell}>
                 Provision of power supply systems required for operation of the supplied PSR,
                 MSSR (Mode S), and DVOR/DME systems, including UPS systems as mentioned on
-                contract offer appropriate capacity, redundancy, and autonomy, and internal
-                power distribution to ensure continuous and reliable operation.
+                contract offer with appropriate capacity, redundancy, and autonomy, and
+                internal power distribution to ensure continuous and reliable operation.
               </td>
             </tr>
             <tr>

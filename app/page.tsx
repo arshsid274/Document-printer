@@ -27,9 +27,11 @@ import SalarySlipTemplate1 from "../templates/salary-slip/Template1";
 import SalarySlipTemplate2 from "../templates/salary-slip/Template2";
 import SalarySlipBatchTemplate from "../templates/salary-slip/BatchTemplate";
 import MicrosoftSalesChatTemplate1 from "../templates/microsoft-sales-chat/Template1";
+import UltrasoundReportTemplate1 from "../templates/ultrasound-report/Template1";
+import PrescriptionTemplate1 from "../templates/prescription/Template1";
 
 type EditableDocumentValues = Record<string, string | number>;
-const FORM_DATA_STORAGE_KEY = "document-printer.formData.v11";
+const FORM_DATA_STORAGE_KEY = "document-printer.formData.v12";
 const TEMPLATE_STORAGE_KEY = "document-printer.templateSelection.v1";
 const ACTIVE_DOCUMENT_STORAGE_KEY = "document-printer.activeDocument.v1";
 
@@ -46,7 +48,9 @@ function mergeFormDataWithDefaults(rawValue: unknown): DocumentDataMap {
     "roles-responsibility": { ...mockData["roles-responsibility"] },
     "microsoft-sales-chat": { ...mockData["microsoft-sales-chat"] },
     "bill": { ...mockData["bill"] },
-    "contract": { ...mockData["contract"] }
+    "contract": { ...mockData["contract"] },
+    "ultrasound-report": { ...mockData["ultrasound-report"] },
+    "prescription": { ...mockData["prescription"] }
   };
 
   if (!isObjectRecord(rawValue)) {
@@ -206,6 +210,14 @@ export default function HomePage() {
 
     if (selectedDocument === "contract") {
       return <ContractTemplate1 data={formDataByDocument["contract"]} />;
+    }
+
+    if (selectedDocument === "ultrasound-report") {
+      return <UltrasoundReportTemplate1 data={formDataByDocument["ultrasound-report"]} />;
+    }
+
+    if (selectedDocument === "prescription") {
+      return <PrescriptionTemplate1 data={formDataByDocument["prescription"]} />;
     }
 
     if (selectedDocument === "microsoft-sales-chat") {

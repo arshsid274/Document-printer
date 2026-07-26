@@ -172,6 +172,80 @@ export interface ContractData {
   contractorSignatoryTitle: string;
 }
 
+export interface UltrasoundReportData {
+  [key: string]: string | number;
+  clinicName: string;
+  clinicAddress: string;
+  clinicPhone: string;
+  doctorName: string;
+  doctorQualification: string;
+  doctorHospital: string;
+  doctorDesignation: string;
+  reportId: string;
+  patientName: string;
+  reportDate: string;
+  referredBy: string;
+  ageSex: string;
+  studyTitle: string;
+  liver: string;
+  gallBladder: string;
+  cbd: string;
+  pancreas: string;
+  spleen: string;
+  diaphragm: string;
+  rightKidney: string;
+  leftKidney: string;
+  urinaryBladder: string;
+  prostate: string;
+  uterus: string;
+  adnexa: string;
+  retroperitoneum: string;
+  lymphNodes: string;
+  ascites: string;
+  impression: string;
+  signatoryName: string;
+  signatoryQualification: string;
+  footerTiming: string;
+  footerNote: string;
+}
+
+export interface PrescriptionData {
+  [key: string]: string | number;
+  department: string;
+  addressLine: string;
+  patientTitle: string;
+  patientName: string;
+  patientId: string;
+  ageSex: string;
+  refByDoctor: string;
+  date: string;
+  complaints: string;
+  diagnosis: string;
+  med1Name: string;
+  med1Dosage: string;
+  med1Duration: string;
+  med2Name: string;
+  med2Dosage: string;
+  med2Duration: string;
+  med3Name: string;
+  med3Dosage: string;
+  med3Duration: string;
+  med4Name: string;
+  med4Dosage: string;
+  med4Duration: string;
+  med5Name: string;
+  med5Dosage: string;
+  med5Duration: string;
+  med6Name: string;
+  med6Dosage: string;
+  med6Duration: string;
+  advice: string;
+  followUp: string;
+  doctorName: string;
+  doctorQualification: string;
+  doctorRegNo: string;
+}
+
 export interface DocumentDataMap {
   "salary-slip": SalarySlipData;
   "offer-letter": OfferLetterData;
@@ -181,6 +255,8 @@ export interface DocumentDataMap {
   "roles-responsibility": RolesResponsibilityData;
   "bill": BillData;
   "contract": ContractData;
+  "ultrasound-report": UltrasoundReportData;
+  "prescription": PrescriptionData;
 }
 
 export type DocumentType = keyof DocumentDataMap;
@@ -195,7 +271,7 @@ export interface TemplateMeta {
   label: string;
 }
 
-export type FieldInputType = "text" | "number" | "date" | "month";
+export type FieldInputType = "text" | "number" | "date" | "month" | "textarea";
 
 export interface DynamicField {
   key: string;
@@ -211,6 +287,8 @@ export const documentOptions: SidebarOption[] = [
   { id: "roles-responsibility", label: "Roles & Responsibility" },
   { id: "contract", label: "Contract" },
   { id: "bill", label: "Bill" },
+  { id: "ultrasound-report", label: "Ultrasound Report" },
+  { id: "prescription", label: "Prescription" },
   { id: "microsoft-sales-chat", label: "Microsoft Sales Chat" }
 ];
 
@@ -230,7 +308,9 @@ export const templateRegistry: Record<DocumentType, TemplateMeta[]> = {
   "roles-responsibility": [{ id: "template1", label: "Template 1" }],
   "microsoft-sales-chat": [{ id: "template1", label: "Template 1" }],
   "bill": [{ id: "template1", label: "Template 1" }],
-  "contract": [{ id: "template1", label: "Template 1" }]
+  "contract": [{ id: "template1", label: "Template 1" }],
+  "ultrasound-report": [{ id: "template1", label: "Template 1 (Care Diagnostic Centre)" }],
+  "prescription": [{ id: "template1", label: "Template 1 (Park Hospital)" }]
 };
 
 export const defaultTemplateSelection: Record<DocumentType, string> = {
@@ -241,7 +321,9 @@ export const defaultTemplateSelection: Record<DocumentType, string> = {
   "roles-responsibility": "template1",
   "microsoft-sales-chat": "template1",
   "bill": "template1",
-  "contract": "template1"
+  "contract": "template1",
+  "ultrasound-report": "template1",
+  "prescription": "template1"
 };
 
 export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
@@ -401,6 +483,76 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     { key: "employerCompany", label: "Employer Company (signature)", type: "text" },
     { key: "contractorSignatoryName", label: "Contractor Signatory Name", type: "text" },
     { key: "contractorSignatoryTitle", label: "Contractor Signatory Title", type: "text" }
+  ],
+  "ultrasound-report": [
+    { key: "clinicName", label: "Centre Name", type: "text" },
+    { key: "clinicAddress", label: "Centre Address", type: "text" },
+    { key: "clinicPhone", label: "Mobile No", type: "text" },
+    { key: "doctorName", label: "Radiologist Name (header)", type: "text" },
+    { key: "doctorQualification", label: "Radiologist Qualification", type: "text" },
+    { key: "doctorHospital", label: "Radiologist Hospital", type: "text" },
+    { key: "doctorDesignation", label: "Radiologist Designation", type: "text" },
+    { key: "reportId", label: "Report ID", type: "text" },
+    { key: "patientName", label: "Patient Name", type: "text" },
+    { key: "reportDate", label: "Report Date", type: "text" },
+    { key: "referredBy", label: "Referred By", type: "text" },
+    { key: "ageSex", label: "Age / Sex", type: "text" },
+    { key: "studyTitle", label: "Study Title", type: "text" },
+    { key: "liver", label: "Liver", type: "textarea" },
+    { key: "gallBladder", label: "Gall Bladder", type: "textarea" },
+    { key: "cbd", label: "CBD / PV / Porta", type: "textarea" },
+    { key: "pancreas", label: "Pancreas", type: "textarea" },
+    { key: "spleen", label: "Spleen", type: "textarea" },
+    { key: "diaphragm", label: "Diaphragm", type: "textarea" },
+    { key: "rightKidney", label: "Right Kidney", type: "textarea" },
+    { key: "leftKidney", label: "Left Kidney", type: "textarea" },
+    { key: "urinaryBladder", label: "Urinary Bladder", type: "textarea" },
+    { key: "prostate", label: "Prostate (male only)", type: "textarea" },
+    { key: "uterus", label: "Uterus (female only)", type: "textarea" },
+    { key: "adnexa", label: "Adnexa / Ovaries (female only)", type: "textarea" },
+    { key: "retroperitoneum", label: "Retroperitoneum", type: "textarea" },
+    { key: "lymphNodes", label: "Lymph Nodes", type: "textarea" },
+    { key: "ascites", label: "Ascites", type: "textarea" },
+    { key: "impression", label: "Impression (one line per bullet)", type: "textarea" },
+    { key: "signatoryName", label: "Signatory Name", type: "text" },
+    { key: "signatoryQualification", label: "Signatory Qualification", type: "text" },
+    { key: "footerTiming", label: "Footer: Timing", type: "text" },
+    { key: "footerNote", label: "Footer: Note", type: "text" }
+  ],
+  "prescription": [
+    { key: "department", label: "Department (header, right)", type: "text" },
+    { key: "addressLine", label: "Address / Phone line", type: "text" },
+    { key: "patientTitle", label: "Patient Title", type: "text" },
+    { key: "patientName", label: "Patient's Name", type: "text" },
+    { key: "patientId", label: "Pt. ID", type: "text" },
+    { key: "ageSex", label: "Age / Sex", type: "text" },
+    { key: "refByDoctor", label: "Ref. by Dr.", type: "text" },
+    { key: "date", label: "Date", type: "text" },
+    { key: "complaints", label: "Chief Complaints", type: "textarea" },
+    { key: "diagnosis", label: "Diagnosis", type: "textarea" },
+    { key: "med1Name", label: "Medicine 1", type: "text" },
+    { key: "med1Dosage", label: "Medicine 1 – Dosage", type: "text" },
+    { key: "med1Duration", label: "Medicine 1 – Duration", type: "text" },
+    { key: "med2Name", label: "Medicine 2", type: "text" },
+    { key: "med2Dosage", label: "Medicine 2 – Dosage", type: "text" },
+    { key: "med2Duration", label: "Medicine 2 – Duration", type: "text" },
+    { key: "med3Name", label: "Medicine 3", type: "text" },
+    { key: "med3Dosage", label: "Medicine 3 – Dosage", type: "text" },
+    { key: "med3Duration", label: "Medicine 3 – Duration", type: "text" },
+    { key: "med4Name", label: "Medicine 4", type: "text" },
+    { key: "med4Dosage", label: "Medicine 4 – Dosage", type: "text" },
+    { key: "med4Duration", label: "Medicine 4 – Duration", type: "text" },
+    { key: "med5Name", label: "Medicine 5", type: "text" },
+    { key: "med5Dosage", label: "Medicine 5 – Dosage", type: "text" },
+    { key: "med5Duration", label: "Medicine 5 – Duration", type: "text" },
+    { key: "med6Name", label: "Medicine 6", type: "text" },
+    { key: "med6Dosage", label: "Medicine 6 – Dosage", type: "text" },
+    { key: "med6Duration", label: "Medicine 6 – Duration", type: "text" },
+    { key: "advice", label: "Advice", type: "textarea" },
+    { key: "followUp", label: "Follow-up", type: "text" },
+    { key: "doctorName", label: "Doctor's Name", type: "text" },
+    { key: "doctorQualification", label: "Doctor's Qualification", type: "text" },
+    { key: "doctorRegNo", label: "Reg. No.", type: "text" }
   ]
 };
 
@@ -561,5 +713,85 @@ export const mockData: DocumentDataMap = {
     employerCompany: "Global Builders Construction Limited",
     contractorSignatoryName: "Mr. Essay Bousayf",
     contractorSignatoryTitle: "General Manager"
+  },
+  "ultrasound-report": {
+    clinicName: "Care Diagnostic Centre",
+    clinicAddress: "Near Kali Mandir, Daudpur, Gorakhpur",
+    clinicPhone: "8429965528",
+    doctorName: "Dr. (Mrs.) Sarwat Ali",
+    doctorQualification: "MBBS, DMRD",
+    doctorHospital: "KEM Hospital Mumbai",
+    doctorDesignation: "Consultant Radiologist",
+    reportId: "ID-UX2231222",
+    patientName: "MRS. ANJUM FATIMA",
+    reportDate: "24 JULY 2026",
+    referredBy: "SELF",
+    ageSex: "42Y/F",
+    studyTitle: "USG: WHOLE ABDOMEN (FEMALE)",
+    liver:
+      "Liver- Normal in size (13.9 cm) and shape. Homogeneous echotexture. No IHBR dilatation / focal SOL is seen.",
+    gallBladder:
+      "Gall bladder - Partially distended.  A 12.0 mm calculus is seen in neck of gall bladder. Wall appears thickened.  Sludge seen in gall bladder.",
+    cbd: "CBD –3.0mm (normal).   PV - normal.  porta - normal",
+    pancreas:
+      "Pancreas is normal in thickness. Clearly defined margins are seen. Pancreatic duct is not dilated.",
+    spleen: "Spleen is normal in size (8.4 cm) and echotexture.  No focal lesion is seen.",
+    diaphragm: "Diaphragmatic movements are within normal limits on both side.",
+    rightKidney:
+      "Right kidney- normal in size (9.5x3.4 cm),outline and cortical echotexture. Renal parenchymal width is normal. Cortico-medullary differentiation is normal. No backpressure changes are seen. Perinephric spaces are normal. Ureter – normal.",
+    leftKidney:
+      "Left kidney- normal in size (9.8x4.5 cm), Perinephric spaces are normal. Mild left hydronephrosis is seen. Left ureter is dilated. A 10.4 mm calculus is seen in distal third of left ureter. Mild cortical thinning is seen in left kidney.",
+    urinaryBladder:
+      "Urinary bladder is partially filled. Wall is smooth and regular. Lumen is echofree.",
+    prostate: "",
+    uterus:
+      "Uterus is retroverted and normal in size (6.9x3.9x4.6 cm) and shape. Myometrium and endometrium is normal. No definite evidence of myoma is seen. Endometrial cavity is free.",
+    adnexa: "B/L adnexa /ovaries are normal.",
+    retroperitoneum:
+      "Retroperitoneal vessels are normal. No retroperitoneal or mesenteric lymphnodes are seen. Psoas muscles are normal.",
+    lymphNodes: "",
+    ascites: "No evidence of ascitis is seen in abdomen.",
+    impression:
+      "Cholelithiasis with cholecystitis & sludge in gall bladder.\nMild left hydroureteronephrosis due to distal left ureteric calculus.\nMild cortical thinning is seen in left kidney.",
+    signatoryName: "Dr.Sarwat Ali",
+    signatoryQualification: "M.B.B.S.DMRD",
+    footerTiming: "Timing : Monday to Saturday - 09 AM to 07 PM",
+    footerNote: "This report is not for medico legal purpose"
+  },
+  "prescription": {
+    department: "MEDICINE",
+    addressLine:
+      "हनुमान मंदिर रोड, बेतियाहाता, गोरखपुर, फोन : 05512200698, 05517960339, 9793735689",
+    patientTitle: "Mrs.",
+    patientName: "ANJUM FATIMA",
+    patientId: "6311",
+    ageSex: "42 Y / F",
+    refByDoctor: "DR.ONKAR RAI (M.D.MED.)",
+    date: "29/09/2022",
+    complaints: "Fever with body ache since 3 days.",
+    diagnosis: "Acute viral fever.",
+    med1Name: "Tab. Paracetamol 500 mg",
+    med1Dosage: "1 - 0 - 1  (after food)",
+    med1Duration: "5 days",
+    med2Name: "Cap. Omeprazole 20 mg",
+    med2Dosage: "1 - 0 - 0  (before food)",
+    med2Duration: "10 days",
+    med3Name: "Tab. Cetirizine 10 mg",
+    med3Dosage: "0 - 0 - 1  (at bedtime)",
+    med3Duration: "5 days",
+    med4Name: "Syp. Antacid",
+    med4Dosage: "2 tsp  (SOS)",
+    med4Duration: "7 days",
+    med5Name: "",
+    med5Dosage: "",
+    med5Duration: "",
+    med6Name: "",
+    med6Dosage: "",
+    med6Duration: "",
+    advice: "Plenty of oral fluids. Light diet. Review if fever persists beyond 3 days.",
+    followUp: "06/10/2022",
+    doctorName: "DR. ONKAR RAI",
+    doctorQualification: "M.D. (Medicine)",
+    doctorRegNo: ""
   }
 };

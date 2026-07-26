@@ -16,6 +16,14 @@ export default function DynamicForm({ fields, values, onChange }: DynamicFormPro
         {fields.map((field) => (
           <label key={field.key} className="grid gap-1.5 text-sm text-slate-600">
             <span>{field.label}</span>
+            {field.type === "textarea" ? (
+              <textarea
+                rows={3}
+                value={values[field.key] ?? ""}
+                onChange={(event) => onChange(field.key, event.target.value)}
+                className="w-full resize-y rounded-lg border border-slate-300 bg-white px-2.5 py-2.5 leading-snug text-slate-800 outline-none transition-shadow focus:border-[#1958b7] focus:ring-4 focus:ring-[#1958b7]/15"
+              />
+            ) : (
             <input
               type={field.type}
               value={values[field.key] ?? ""}
@@ -29,6 +37,7 @@ export default function DynamicForm({ fields, values, onChange }: DynamicFormPro
               }}
               className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2.5 text-slate-800 outline-none transition-shadow focus:border-[#1958b7] focus:ring-4 focus:ring-[#1958b7]/15"
             />
+            )}
           </label>
         ))}
       </form>

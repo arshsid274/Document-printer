@@ -156,7 +156,12 @@ function titleCase(value: string): string {
 }
 
 // ─── identical data from BatchTemplate ───────────────────────────────────────
-const BASE: Omit<SalarySlipData, "month" | "workingDays" | "deductions"> = {
+/* Don't annotate this with `Omit<SalarySlipData, ...>`: SalarySlipData carries a
+   `[key: string]: string | number` index signature, so `keyof` widens to
+   `string | number`, the omit strips every *named* property, and the spread below
+   ends up missing all 24 of them. `satisfies` type-checks the literal against the
+   interface while keeping its own keys intact. */
+const BASE = {
   companyName: "DATCO CIVIL",
   employeeName: "Anderson Varghese",
   employeeId: "EMP-0988",
@@ -181,7 +186,7 @@ const BASE: Omit<SalarySlipData, "month" | "workingDays" | "deductions"> = {
   tdsDeduction: 0,
   professionalTax: 0,
   companyEmail: "davisvibin@gmail.com",
-};
+} satisfies Partial<SalarySlipData>;
 
 const SLIPS = [
   { month: "2021-07", lwp: 0 },

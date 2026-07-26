@@ -29,6 +29,7 @@ import SalarySlipBatchTemplate from "../templates/salary-slip/BatchTemplate";
 import MicrosoftSalesChatTemplate1 from "../templates/microsoft-sales-chat/Template1";
 import UltrasoundReportTemplate1 from "../templates/ultrasound-report/Template1";
 import PrescriptionTemplate1 from "../templates/prescription/Template1";
+import PrescriptionTemplate2 from "../templates/prescription/Template2";
 
 type EditableDocumentValues = Record<string, string | number>;
 const FORM_DATA_STORAGE_KEY = "document-printer.formData.v12";
@@ -217,6 +218,9 @@ export default function HomePage() {
     }
 
     if (selectedDocument === "prescription") {
+      if (activeTemplate === "template2") {
+        return <PrescriptionTemplate2 data={formDataByDocument["prescription"]} />;
+      }
       return <PrescriptionTemplate1 data={formDataByDocument["prescription"]} />;
     }
 

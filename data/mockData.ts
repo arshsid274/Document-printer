@@ -310,7 +310,10 @@ export const templateRegistry: Record<DocumentType, TemplateMeta[]> = {
   "bill": [{ id: "template1", label: "Template 1" }],
   "contract": [{ id: "template1", label: "Template 1" }],
   "ultrasound-report": [{ id: "template1", label: "Template 1 (Care Diagnostic Centre)" }],
-  "prescription": [{ id: "template1", label: "Template 1 (Park Hospital)" }]
+  "prescription": [
+    { id: "template1", label: "Template 1 (Park Hospital)" },
+    { id: "template2", label: "Template 2 (Blank – letterhead only)" }
+  ]
 };
 
 export const defaultTemplateSelection: Record<DocumentType, string> = {
@@ -767,7 +770,7 @@ export const mockData: DocumentDataMap = {
     patientId: "6311",
     ageSex: "42 Y / F",
     refByDoctor: "DR.ONKAR RAI (M.D.MED.)",
-    date: "29/09/2022",
+    date: "24/07/2026",
     complaints: "Fever with body ache since 3 days.",
     diagnosis: "Acute viral fever.",
     med1Name: "Tab. Paracetamol 500 mg",
@@ -789,7 +792,7 @@ export const mockData: DocumentDataMap = {
     med6Dosage: "",
     med6Duration: "",
     advice: "Plenty of oral fluids. Light diet. Review if fever persists beyond 3 days.",
-    followUp: "06/10/2022",
+    followUp: "31/07/2026",
     doctorName: "DR. ONKAR RAI",
     doctorQualification: "M.D. (Medicine)",
     doctorRegNo: ""

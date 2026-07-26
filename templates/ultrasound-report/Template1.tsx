@@ -51,6 +51,33 @@ const sz = (measured: number) => `${+(measured * S).toFixed(2)}px`;
 const HEAD_L = 45.5;
 const HEAD_R = 794 - HEAD_L; // 748.5
 
+/*
+ * Masthead composition: centre name | logo | radiologist block.
+ * Both text blocks get a locked width so the geometry is identical on every
+ * machine (a missing script font would otherwise change the doctor block's
+ * width and throw the logo off centre). The logo then sits exactly midway
+ * between them, which is also where the original letterhead puts it.
+ */
+const NAME_W = 290; // "Care Diagnostic Centre", width-locked
+const CURSIVE_W = 230; // "Dr. (Mrs.) Sarwat Ali", ≈ its natural width
+const CURSIVE_R = HEAD_R - 4; // italic script overshoots its anchor slightly
+const LOGO_H = 82;
+const LOGO_W = +(LOGO_H * (407 / 363)).toFixed(2); // 91.94 – artwork aspect
+/* For reference: the centre name ends at x=335.5 (HEAD_L + NAME_W) and the
+   radiologist block starts at x=514.5 (CURSIVE_R - CURSIVE_W). */
+
+/* ═══════════════════ MOVE THE LOGO LEFT / RIGHT: EDIT THIS ═══════════════════
+   LOGO_X is the logo's left edge, in px from the left edge of the page.
+       LOWER  number  →  logo moves LEFT
+       HIGHER number  →  logo moves RIGHT
+   1 = 1px. Useful values:
+       335  hard against the centre name (no gap)
+       360  current
+       378  equal gaps to the name and the radiologist block
+       423  hard against the radiologist block (no gap)
+   ═════════════════════════════════════════════════════════════════════════ */
+const LOGO_X = 330;
+
 /** baseline -> line-box top, for line-height:1 (ascent ≈ 0.847em) */
 const topFor = (baseline: number, fontSize: number) => baseline - fontSize * 0.847;
 
@@ -75,7 +102,7 @@ function Letterhead({ data }: UltrasoundReportTemplateProps) {
       <text
         x={HEAD_L}
         y="73.5"
-        textLength="301"
+        textLength={NAME_W}
         lengthAdjust="spacingAndGlyphs"
         fontFamily={CONDENSED_SERIF}
         fontSize="35"
@@ -92,7 +119,16 @@ function Letterhead({ data }: UltrasoundReportTemplateProps) {
       </text>
 
       {/* radiologist block – right-aligned to the page edge */}
-      <text x={HEAD_R - 4} y="59" textAnchor="end" fontFamily={SCRIPT} fontSize="28" fontStyle="italic" fill={CREAM_INK}>
+      <text
+        x={CURSIVE_R}
+        y="59"
+        textAnchor="end"
+        textLength={CURSIVE_W}
+        fontFamily={SCRIPT}
+        fontSize="28"
+        fontStyle="italic"
+        fill={CREAM_INK}
+      >
         {data.doctorName}
       </text>
       <text x={HEAD_R} y="80.5" textAnchor="end" fontFamily={ARIAL} fontSize="14.6" fill={WHITE_INK}>
@@ -163,15 +199,23 @@ export default function Template1({ data }: UltrasoundReportTemplateProps) {
       <div style={{ position: "relative", height: `${HEADER_H}px` }}>
         <Letterhead data={data} />
 
-        {/* logo – sits in the gap between the two text blocks (slot x 377–476) */}
+        {/* logo – x from LOGO_CLEAR_L, y from `top` below, size from LOGO_H */}
         <img
           src="/images/logos/care-logo.png"
           alt={`${data.clinicName} logo`}
-          style={{ position: "absolute", left: "371px", top: "46px", height: "89px", width: "auto" }}
+          style={{
+            position: "absolute",
+            left: `${LOGO_X}px`,
+            top: "45px",
+            height: `${LOGO_H}px`,
+            width: `${LOGO_W}px`,
+          }}
         />
 
-        {/* report id stamp – rides the arch on the left flank */}
-        <div style={line(176, 14, { left: `${TEXT_L}px`, fontWeight: "bold", color: ID_INK, letterSpacing: "0.2px" })}>
+        {/* Report id stamp. Sat on the charcoal at the original's height, where dark
+            ink on a dark panel is unreadable; dropped onto the band/white below the
+            arch so the whole string reads. */}
+        <div style={line(197, 14, { left: `${TEXT_L}px`, fontWeight: "bold", color: ID_INK, letterSpacing: "0.2px" })}>
           {data.reportId}
         </div>
 

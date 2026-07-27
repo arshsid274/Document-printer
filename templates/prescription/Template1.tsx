@@ -7,7 +7,6 @@ import {
   ParkFooterRule,
   ParkMasthead,
   ParkPatientBlock,
-  ParkSignature,
   labelStyle,
   pageStyle,
   sectionTitleStyle,
@@ -134,8 +133,6 @@ export default function Template1({ data }: PrescriptionTemplateProps) {
             <span style={{ fontWeight: "bold" }}>{data.followUp}</span>
           </p>
         ) : null}
-
-        <ParkSignature data={data} />
       </div>
 
       <ParkFooterRule />

@@ -4,7 +4,6 @@ import {
   ParkFooterRule,
   ParkMasthead,
   ParkPatientBlock,
-  ParkSignature,
   PAD,
   pageStyle,
 } from "../shared/ParkComponents";
@@ -25,9 +24,7 @@ export default function Template2({ data }: PrescriptionTemplateProps) {
       <ParkPatientBlock data={data} />
 
       {/* body deliberately empty – space to write the prescription by hand */}
-      <div style={{ flex: 1, padding: `12px ${PAD}px 0`, display: "flex", flexDirection: "column" }}>
-        <ParkSignature data={data} />
-      </div>
+      <div style={{ flex: 1, padding: `12px ${PAD}px 0`, display: "flex", flexDirection: "column" }} />
 
       <ParkFooterRule />
     </div>

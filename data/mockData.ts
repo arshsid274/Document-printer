@@ -553,10 +553,10 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     { key: "med6Dosage", label: "Medicine 6 – Dosage", type: "text" },
     { key: "med6Duration", label: "Medicine 6 – Duration", type: "text" },
     { key: "advice", label: "Advice", type: "textarea" },
-    { key: "followUp", label: "Follow-up", type: "text" },
-    { key: "doctorName", label: "Doctor's Name", type: "text" },
-    { key: "doctorQualification", label: "Doctor's Qualification", type: "text" },
-    { key: "doctorRegNo", label: "Reg. No.", type: "text" }
+    { key: "followUp", label: "Follow-up", type: "text" }
+    /* No doctorName / doctorQualification / doctorRegNo fields: the printed
+       signature block was removed from both prescription templates, so these
+       would be controls that change nothing. The data keys still exist. */
   ]
 };
 

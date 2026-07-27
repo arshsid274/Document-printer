@@ -163,29 +163,10 @@ export function ParkPatientBlock({ data }: { data: PrescriptionData }) {
   );
 }
 
-/** Signature rule + doctor lines, bottom-right. Renders nothing if all three are blank. */
-export function ParkSignature({ data }: { data: PrescriptionData }) {
-  const name = `${data.doctorName ?? ""}`.trim();
-  const qualification = `${data.doctorQualification ?? ""}`.trim();
-  const regNo = `${data.doctorRegNo ?? ""}`.trim();
-
-  if (!name && !qualification && !regNo) {
-    return <div style={{ marginTop: "auto" }} />;
-  }
-
-  return (
-    <div style={{ marginTop: "auto", paddingTop: "26px", textAlign: "right" }}>
-      <div style={{ display: "inline-block", textAlign: "left", minWidth: "210px" }}>
-        <div style={{ borderTop: `1px solid ${RULE}`, marginBottom: "5px" }} />
-        {name ? <div style={{ fontSize: "13.5px", fontWeight: "bold" }}>{name}</div> : null}
-        {qualification ? (
-          <div style={{ fontSize: "11.5px", color: "#333" }}>{qualification}</div>
-        ) : null}
-        {regNo ? <div style={{ fontSize: "11.5px", color: "#333" }}>Reg. No. {regNo}</div> : null}
-      </div>
-    </div>
-  );
-}
+/* The signature block (rule + doctor name / qualification / Reg. No.) was removed
+   from both prescription templates – the sheets are signed by hand. The
+   doctorName / doctorQualification / doctorRegNo keys stay on PrescriptionData so
+   the block can be restored without a data migration. */
 
 /** Green rule closing the sheet. */
 export function ParkFooterRule() {

@@ -517,8 +517,9 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     { key: "lymphNodes", label: "Lymph Nodes", type: "textarea" },
     { key: "ascites", label: "Ascites", type: "textarea" },
     { key: "impression", label: "Impression (one line per bullet)", type: "textarea" },
-    { key: "signatoryName", label: "Signatory Name", type: "text" },
-    { key: "signatoryQualification", label: "Signatory Qualification", type: "text" },
+    /* signatoryName / signatoryQualification are no longer form fields: the signature
+       is printed from the scanned image (dr-signature-block.png), which carries its
+       own name and qualification. The data keys remain, feeding the image's alt text. */
     { key: "footerTiming", label: "Footer: Timing", type: "text" },
     { key: "footerNote", label: "Footer: Note", type: "text" }
   ],
@@ -720,7 +721,7 @@ export const mockData: DocumentDataMap = {
   "ultrasound-report": {
     clinicName: "Care Diagnostic Centre",
     clinicAddress: "Near Kali Mandir, Daudpur, Gorakhpur",
-    clinicPhone: "8429965528",
+    clinicPhone: "9569865981",
     doctorName: "Dr. (Mrs.) Sarwat Ali",
     doctorQualification: "MBBS, DMRD",
     doctorHospital: "KEM Hospital Mumbai",
@@ -728,7 +729,7 @@ export const mockData: DocumentDataMap = {
     reportId: "ID-UX2231222",
     patientName: "MRS. ANJUM FATIMA",
     reportDate: "24 JULY 2026",
-    referredBy: "SELF",
+    referredBy: "DR.ONKAR RAI (M.D.MED.)",
     ageSex: "42Y/F",
     studyTitle: "USG: WHOLE ABDOMEN (FEMALE)",
     liver:
@@ -764,7 +765,7 @@ export const mockData: DocumentDataMap = {
   "prescription": {
     department: "MEDICINE",
     addressLine:
-      "हनुमान मंदिर रोड, बेतियाहाता, गोरखपुर, फोन : 05512200698, 05517960339, 9793735689",
+      "हनुमान मंदिर रोड, बेतियाहाता, गोरखपुर, फोन : 05512200698, 05517960339, 9839965677",
     patientTitle: "Mrs.",
     patientName: "ANJUM FATIMA",
     patientId: "6311",

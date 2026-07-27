@@ -32,7 +32,10 @@ import PrescriptionTemplate1 from "../templates/prescription/Template1";
 import PrescriptionTemplate2 from "../templates/prescription/Template2";
 
 type EditableDocumentValues = Record<string, string | number>;
-const FORM_DATA_STORAGE_KEY = "document-printer.formData.v12";
+/* Bump this whenever the defaults in mockData change: stored form data is merged
+   OVER the defaults, so an existing browser keeps showing its old saved values
+   until the key changes. v13 = new phone numbers, ref-by and dates. */
+const FORM_DATA_STORAGE_KEY = "document-printer.formData.v13";
 const TEMPLATE_STORAGE_KEY = "document-printer.templateSelection.v1";
 const ACTIVE_DOCUMENT_STORAGE_KEY = "document-printer.activeDocument.v1";
 

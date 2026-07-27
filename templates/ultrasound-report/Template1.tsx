@@ -39,6 +39,9 @@ const TEXT_R = TEXT_L;
 /* Offsets measured from the original's left margin, so they travel with the column. */
 const META_RIGHT_COL = 419.2; // date / age-sex column
 const SIG_INDENT = 407.5; // signature block
+/* Width of the scanned signature block (stroke + both typed lines). 97px puts its
+   typed name at ~84px, the same size the report's own type would render it. */
+const SIG_BLOCK_W = 97;
 
 /* Body type scale. The original was typed at 12pt (16px) findings; everything
    below is expressed as `measured * S` so the whole report can be re-tuned from
@@ -320,26 +323,16 @@ export default function Template1({ data }: UltrasoundReportTemplateProps) {
           ))}
         </ul>
 
-        {/* signature */}
-        <div
-          style={{
-            position: "relative",
-            marginTop: sz(46),
-            marginLeft: `${SIG_INDENT}px`,
-            fontFamily: MS_SANS,
-            fontSize: sz(17.3),
-            lineHeight: sz(21.1),
-            fontWeight: "bold",
-          }}
-        >
-          {/* scanned signature, sitting over the name as on the original */}
+        {/* Signature: the whole scan – pen stroke and both typed lines – used as one
+            image, so the name and qualification are the scan's own, not live text.
+            SIG_BLOCK_W sizes it; at 97px the typed name reads ~84px wide, matching
+            the report's type. */}
+        <div style={{ marginTop: sz(15), marginLeft: `${SIG_INDENT - 1.3}px` }}>
           <img
-            src="/images/logos/sarwat-signature.png"
-            alt=""
-            style={{ position: "absolute", left: sz(34), top: `-${sz(14)}`, width: sz(44), height: "auto" }}
+            src="/images/logos/dr-signature-block.png"
+            alt={`${data.signatoryName} — ${data.signatoryQualification}`}
+            style={{ width: `${SIG_BLOCK_W}px`, height: "auto", display: "block" }}
           />
-          <div>{data.signatoryName}</div>
-          <div>{data.signatoryQualification}</div>
         </div>
       </div>
 

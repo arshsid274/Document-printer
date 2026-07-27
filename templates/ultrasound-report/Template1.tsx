@@ -79,7 +79,7 @@ const LOGO_W = +(LOGO_H * (407 / 363)).toFixed(2); // 91.94 – artwork aspect
        378  equal gaps to the name and the radiologist block
        423  hard against the radiologist block (no gap)
    ═════════════════════════════════════════════════════════════════════════ */
-const LOGO_X = 350;
+const LOGO_X = 340;
 
 /** baseline -> line-box top, for line-height:1 (ascent ≈ 0.847em) */
 const topFor = (baseline: number, fontSize: number) => baseline - fontSize * 0.847;

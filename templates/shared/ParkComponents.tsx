@@ -55,8 +55,16 @@ export const sectionTitleStyle: React.CSSProperties = {
   margin: "0 0 3px",
 };
 
+/* The masthead only needs the two letterhead fields, so every Park sheet
+   (prescription, medical certificate, ...) can share it. */
+export interface ParkLetterheadData {
+  [key: string]: string | number;
+  department: string;
+  addressLine: string;
+}
+
 /** Green bar: logo left, DEPARTMENT OF <name> right. Plus the address line under it. */
-export function ParkMasthead({ data }: { data: PrescriptionData }) {
+export function ParkMasthead({ data }: { data: ParkLetterheadData }) {
   const department = `${data.department ?? ""}`.trim();
 
   return (

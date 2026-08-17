@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import DynamicForm from "../components/DynamicForm";
 import InvoicePrint from "../components/InvoicePrint";
 import PreviewPanel from "../components/PreviewPanel";
+import SavedRecords from "../components/SavedRecords";
 import Sidebar from "../components/Sidebar";
 import TemplateSelector from "../components/TemplateSelector";
 import {
@@ -30,12 +31,15 @@ import MicrosoftSalesChatTemplate1 from "../templates/microsoft-sales-chat/Templ
 import UltrasoundReportTemplate1 from "../templates/ultrasound-report/Template1";
 import PrescriptionTemplate1 from "../templates/prescription/Template1";
 import PrescriptionTemplate2 from "../templates/prescription/Template2";
+import ResumeTemplate1 from "../templates/resume/Template1";
+import MedicalCertificateTemplate1 from "../templates/medical-certificate/Template1";
+import MedicalCertificateTemplate2 from "../templates/medical-certificate/Template2";
 
 type EditableDocumentValues = Record<string, string | number>;
 /* Bump this whenever the defaults in mockData change: stored form data is merged
    OVER the defaults, so an existing browser keeps showing its old saved values
-   until the key changes. v13 = new phone numbers, ref-by and dates. */
-const FORM_DATA_STORAGE_KEY = "document-printer.formData.v13";
+   until the key changes. v21 = updated medical certificate diagnosis. */
+const FORM_DATA_STORAGE_KEY = "document-printer.formData.v21";
 const TEMPLATE_STORAGE_KEY = "document-printer.templateSelection.v1";
 const ACTIVE_DOCUMENT_STORAGE_KEY = "document-printer.activeDocument.v1";
 
@@ -54,7 +58,9 @@ function mergeFormDataWithDefaults(rawValue: unknown): DocumentDataMap {
     "bill": { ...mockData["bill"] },
     "contract": { ...mockData["contract"] },
     "ultrasound-report": { ...mockData["ultrasound-report"] },
-    "prescription": { ...mockData["prescription"] }
+    "prescription": { ...mockData["prescription"] },
+    "medical-certificate": { ...mockData["medical-certificate"] },
+    "resume": { ...mockData["resume"] }
   };
 
   if (!isObjectRecord(rawValue)) {
@@ -165,6 +171,18 @@ export default function HomePage() {
     localStorage.setItem(ACTIVE_DOCUMENT_STORAGE_KEY, selectedDocument);
   }, [hasHydratedStorage, selectedDocument]);
 
+  /* Merged over the current values, so a record saved before a field existed
+     still loads and simply leaves that newer field at its default. */
+  const handleLoadRecord = (values: Record<string, string | number>) => {
+    setFormDataByDocument((previous) => ({
+      ...previous,
+      [selectedDocument]: {
+        ...previous[selectedDocument],
+        ...values
+      }
+    }));
+  };
+
   const handleFieldChange = (key: string, value: string | number) => {
     setFormDataByDocument((previous) => {
       const currentValues = previous[selectedDocument];
@@ -220,6 +238,17 @@ export default function HomePage() {
       return <UltrasoundReportTemplate1 data={formDataByDocument["ultrasound-report"]} />;
     }
 
+    if (selectedDocument === "medical-certificate") {
+      if (activeTemplate === "template2") {
+        return <MedicalCertificateTemplate2 data={formDataByDocument["medical-certificate"]} />;
+      }
+      return <MedicalCertificateTemplate1 data={formDataByDocument["medical-certificate"]} />;
+    }
+
+    if (selectedDocument === "resume") {
+      return <ResumeTemplate1 data={formDataByDocument["resume"]} />;
+    }
+
     if (selectedDocument === "prescription") {
       if (activeTemplate === "template2") {
         return <PrescriptionTemplate2 data={formDataByDocument["prescription"]} />;
@@ -243,7 +272,7 @@ export default function HomePage() {
       />
 
       <main className="grid min-h-screen grid-cols-1 min-[1101px]:ml-[255px] min-[1101px]:grid-cols-[minmax(320px,420px)_1fr]">
-        <section className="no-print border-b border-slate-200 bg-white/80 p-6 backdrop-blur-sm min-[1101px]:border-b-0 min-[1101px]:border-r max-[700px]:p-3.5">
+        <section className="no-print studio-scroll border-b border-border-whisper bg-studio-mist p-6 min-[1101px]:h-screen min-[1101px]:overflow-y-auto min-[1101px]:border-b-0 min-[1101px]:border-r max-[700px]:p-3.5">
           <TemplateSelector
             templates={templateOptions}
             selectedTemplate={activeTemplate}
@@ -255,15 +284,30 @@ export default function HomePage() {
             }
           />
           {fieldOptions.length > 0 ? (
-            <DynamicForm fields={fieldOptions} values={activeValues} onChange={handleFieldChange} />
+            <>
+              {/* Above the form: the field list runs to thousands of pixels on
+                  some documents, and save / load is no use if it is never seen. */}
+              <SavedRecords
+                documentType={selectedDocument}
+                currentValues={activeValues}
+                onLoad={handleLoadRecord}
+              />
+              <DynamicForm
+                fields={fieldOptions}
+                values={activeValues}
+                onChange={handleFieldChange}
+              />
+            </>
           ) : (
-            <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600 shadow-[0_6px_18px_rgba(17,32,61,0.06)]">
+            <section className="mt-4 rounded-lg border border-border-whisper bg-white p-5 text-body-sm text-on-surface-variant shadow-[0_2px_10px_rgba(17,32,61,0.06)]">
               This template is static and has no editable form fields.
             </section>
           )}
         </section>
 
-        <section className="p-6 max-[700px]:p-3.5">
+        {/* Own scroll container on desktop: working down the form no longer
+            scrolls the sheet out of view. */}
+        <section className="preview-stage studio-scroll p-6 min-[1101px]:h-screen min-[1101px]:overflow-y-auto max-[700px]:p-3.5">
           <PreviewPanel>
             {selectedDocument === "salary-slip" && activeTemplate === "template3" ? (
               templatePreview

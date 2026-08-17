@@ -246,6 +246,112 @@ export interface PrescriptionData {
   doctorRegNo: string;
 }
 
+export interface ResumeData {
+  [key: string]: string | number;
+  fullName: string;
+  jobTitle: string;
+  phone: string;
+  email: string;
+  location: string;
+  linkedin: string;
+  summary: string;
+  skills: string;
+  exp1Title: string;
+  exp1Company: string;
+  exp1Period: string;
+  exp1Location: string;
+  exp1Details: string;
+  exp2Title: string;
+  exp2Company: string;
+  exp2Period: string;
+  exp2Location: string;
+  exp2Details: string;
+  exp3Title: string;
+  exp3Company: string;
+  exp3Period: string;
+  exp3Location: string;
+  exp3Details: string;
+  ach1Title: string;
+  ach1Text: string;
+  ach2Title: string;
+  ach2Text: string;
+  ach3Title: string;
+  ach3Text: string;
+  ach4Title: string;
+  ach4Text: string;
+  edu1Degree: string;
+  edu1Institution: string;
+  edu1Period: string;
+  edu1Location: string;
+  edu2Degree: string;
+  edu2Institution: string;
+  edu2Period: string;
+  edu2Location: string;
+  course1Title: string;
+  course1Text: string;
+  course2Title: string;
+  course2Text: string;
+  int1Title: string;
+  int1Text: string;
+  int2Title: string;
+  int2Text: string;
+  lang1Name: string;
+  lang1Level: string;
+  lang1Rating: number;
+  lang2Name: string;
+  lang2Level: string;
+  lang2Rating: number;
+  lang3Name: string;
+  lang3Level: string;
+  lang3Rating: number;
+}
+
+export interface MedicalCertificateData {
+  [key: string]: string | number;
+  /* Certificate of Attendance (Template 1) - clinic letterhead format */
+  logoPath: string;
+  clinicName: string;
+  clinicAddress: string;
+  clinicPhone: string;
+  registrationLabel: string;
+  registrationNo: string;
+  emiratesId: string;
+  dateOfBirth: string;
+  ageGender: string;
+  nationality: string;
+  patientPhone: string;
+  insuranceProvider: string;
+  memberPolicyNo: string;
+  company: string;
+  attendedAt: string;
+  attendedOn: string;
+  diagnosisCodes: string;
+  closingStatement: string;
+  specialty: string;
+  licenseLabel: string;
+  licenseNo: string;
+  /* Fitness / sick-leave certificate (Template 2) - Park Hospital letterhead */
+  department: string;
+  addressLine: string;
+  certificateNo: string;
+  date: string;
+  patientTitle: string;
+  patientName: string;
+  ageYears: string;
+  guardianName: string;
+  address: string;
+  identificationMark: string;
+  diagnosis: string;
+  treatedFrom: string;
+  treatedTo: string;
+  restDays: string;
+  fitFrom: string;
+  remarks: string;
+  doctorName: string;
+  doctorQualification: string;
+  doctorRegNo: string;
+}
+
 export interface DocumentDataMap {
   "salary-slip": SalarySlipData;
   "offer-letter": OfferLetterData;
@@ -257,6 +363,8 @@ export interface DocumentDataMap {
   "contract": ContractData;
   "ultrasound-report": UltrasoundReportData;
   "prescription": PrescriptionData;
+  "medical-certificate": MedicalCertificateData;
+  "resume": ResumeData;
 }
 
 export type DocumentType = keyof DocumentDataMap;
@@ -271,7 +379,7 @@ export interface TemplateMeta {
   label: string;
 }
 
-export type FieldInputType = "text" | "number" | "date" | "month" | "textarea";
+export type FieldInputType = "text" | "number" | "date" | "month" | "textarea" | "image";
 
 export interface DynamicField {
   key: string;
@@ -282,6 +390,7 @@ export interface DynamicField {
 export const documentOptions: SidebarOption[] = [
   { id: "offer-letter", label: "Offer Letter" },
   { id: "relieving-letter", label: "Relieving Letter" },
+  { id: "resume", label: "Resume" },
   { id: "salary-slip", label: "Salary Slip" },
   { id: "bank-statement", label: "Bank Statement" },
   { id: "roles-responsibility", label: "Roles & Responsibility" },
@@ -289,6 +398,7 @@ export const documentOptions: SidebarOption[] = [
   { id: "bill", label: "Bill" },
   { id: "ultrasound-report", label: "Ultrasound Report" },
   { id: "prescription", label: "Prescription" },
+  { id: "medical-certificate", label: "Medical Certificate" },
   { id: "microsoft-sales-chat", label: "Microsoft Sales Chat" }
 ];
 
@@ -313,7 +423,12 @@ export const templateRegistry: Record<DocumentType, TemplateMeta[]> = {
   "prescription": [
     { id: "template1", label: "Template 1 (Park Hospital)" },
     { id: "template2", label: "Template 2 (Blank – letterhead only)" }
-  ]
+  ],
+  "medical-certificate": [
+    { id: "template1", label: "Template 1 (Certificate of Attendance)" },
+    { id: "template2", label: "Template 2 (Fitness – Park Hospital)" }
+  ],
+  "resume": [{ id: "template1", label: "Template 1" }]
 };
 
 export const defaultTemplateSelection: Record<DocumentType, string> = {
@@ -326,7 +441,9 @@ export const defaultTemplateSelection: Record<DocumentType, string> = {
   "bill": "template1",
   "contract": "template1",
   "ultrasound-report": "template1",
-  "prescription": "template1"
+  "prescription": "template1",
+  "medical-certificate": "template1",
+  "resume": "template1"
 };
 
 export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
@@ -557,6 +674,108 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     /* No doctorName / doctorQualification / doctorRegNo fields: the printed
        signature block was removed from both prescription templates, so these
        would be controls that change nothing. The data keys still exist. */
+  ],
+  "medical-certificate": [
+    /* ── Template 1 – Certificate of Attendance ── */
+    { key: "clinicName", label: "Clinic Name (letterhead)", type: "text" },
+    { key: "clinicAddress", label: "Clinic Address", type: "textarea" },
+    { key: "clinicPhone", label: "Clinic Phone(s)", type: "textarea" },
+    { key: "logoPath", label: "Logo path (e.g. /images/logos/mine.png)", type: "text" },
+    { key: "registrationLabel", label: "Registration Label", type: "text" },
+    { key: "registrationNo", label: "Registration No.", type: "text" },
+    { key: "emiratesId", label: "Emirates ID / Residence ID", type: "text" },
+    { key: "dateOfBirth", label: "Date of Birth", type: "text" },
+    { key: "ageGender", label: "Age / Gender", type: "text" },
+    { key: "nationality", label: "Nationality", type: "text" },
+    { key: "patientPhone", label: "Patient Phone No.", type: "text" },
+    { key: "insuranceProvider", label: "Insurance Provider", type: "text" },
+    { key: "memberPolicyNo", label: "Member ID / Policy No.", type: "text" },
+    { key: "company", label: "Company", type: "text" },
+    { key: "attendedAt", label: "Has attended (clinic legal name)", type: "text" },
+    { key: "attendedOn", label: "Attended on (date)", type: "text" },
+    { key: "diagnosisCodes", label: "Diagnosed with (ICD codes)", type: "text" },
+    { key: "closingStatement", label: "Closing Statement", type: "text" },
+    { key: "specialty", label: "Doctor's Specialty", type: "text" },
+    { key: "licenseLabel", label: "Licence Label (e.g. DHA license No)", type: "text" },
+    { key: "licenseNo", label: "Licence No.", type: "text" },
+    /* ── Template 2 – Fitness certificate on the Park letterhead ── */
+    { key: "department", label: "Department (header, right)", type: "text" },
+    { key: "addressLine", label: "Address / Phone line", type: "text" },
+    { key: "certificateNo", label: "Certificate No.", type: "text" },
+    { key: "date", label: "Date", type: "text" },
+    { key: "patientTitle", label: "Patient Title", type: "text" },
+    { key: "patientName", label: "Patient's Name", type: "text" },
+    { key: "ageYears", label: "Age (years)", type: "text" },
+    { key: "guardianName", label: "S/o – D/o – W/o", type: "text" },
+    { key: "address", label: "Resident of (address)", type: "text" },
+    { key: "identificationMark", label: "Identification Mark", type: "text" },
+    { key: "diagnosis", label: "Diagnosis", type: "textarea" },
+    { key: "treatedFrom", label: "Under treatment – From", type: "text" },
+    { key: "treatedTo", label: "Under treatment – To", type: "text" },
+    { key: "restDays", label: "Rest advised (e.g. 5 days)", type: "text" },
+    { key: "fitFrom", label: "Fit to resume duty from", type: "text" },
+    { key: "remarks", label: "Remarks", type: "textarea" },
+    { key: "doctorName", label: "Doctor's Name", type: "text" },
+    { key: "doctorQualification", label: "Doctor's Qualification", type: "text" },
+    { key: "doctorRegNo", label: "Registration No.", type: "text" }
+  ],
+  "resume": [
+    { key: "fullName", label: "Full Name", type: "text" },
+    { key: "jobTitle", label: "Headline (Role | Focus | Focus)", type: "text" },
+    { key: "phone", label: "Phone", type: "text" },
+    { key: "email", label: "Email", type: "text" },
+    { key: "linkedin", label: "LinkedIn / Website", type: "text" },
+    { key: "location", label: "Location", type: "text" },
+    { key: "summary", label: "Summary", type: "textarea" },
+    { key: "exp1Title", label: "Experience 1 – Job Title", type: "text" },
+    { key: "exp1Company", label: "Experience 1 – Company", type: "text" },
+    { key: "exp1Period", label: "Experience 1 – Period", type: "text" },
+    { key: "exp1Location", label: "Experience 1 – Location", type: "text" },
+    { key: "exp1Details", label: "Experience 1 – Highlights (one per line)", type: "textarea" },
+    { key: "exp2Title", label: "Experience 2 – Job Title", type: "text" },
+    { key: "exp2Company", label: "Experience 2 – Company", type: "text" },
+    { key: "exp2Period", label: "Experience 2 – Period", type: "text" },
+    { key: "exp2Location", label: "Experience 2 – Location", type: "text" },
+    { key: "exp2Details", label: "Experience 2 – Highlights (one per line)", type: "textarea" },
+    { key: "exp3Title", label: "Experience 3 – Job Title", type: "text" },
+    { key: "exp3Company", label: "Experience 3 – Company", type: "text" },
+    { key: "exp3Period", label: "Experience 3 – Period", type: "text" },
+    { key: "exp3Location", label: "Experience 3 – Location", type: "text" },
+    { key: "exp3Details", label: "Experience 3 – Highlights (one per line)", type: "textarea" },
+    { key: "ach1Title", label: "Key Achievement 1 – Title", type: "text" },
+    { key: "ach1Text", label: "Key Achievement 1 – Description", type: "textarea" },
+    { key: "ach2Title", label: "Key Achievement 2 – Title", type: "text" },
+    { key: "ach2Text", label: "Key Achievement 2 – Description", type: "textarea" },
+    { key: "ach3Title", label: "Key Achievement 3 – Title", type: "text" },
+    { key: "ach3Text", label: "Key Achievement 3 – Description", type: "textarea" },
+    { key: "ach4Title", label: "Key Achievement 4 – Title", type: "text" },
+    { key: "ach4Text", label: "Key Achievement 4 – Description", type: "textarea" },
+    { key: "skills", label: "Skills (one per line)", type: "textarea" },
+    { key: "edu1Degree", label: "Education 1 – Degree", type: "text" },
+    { key: "edu1Institution", label: "Education 1 – Institution", type: "text" },
+    { key: "edu1Period", label: "Education 1 – Period", type: "text" },
+    { key: "edu1Location", label: "Education 1 – Location", type: "text" },
+    { key: "edu2Degree", label: "Education 2 – Degree", type: "text" },
+    { key: "edu2Institution", label: "Education 2 – Institution", type: "text" },
+    { key: "edu2Period", label: "Education 2 – Period", type: "text" },
+    { key: "edu2Location", label: "Education 2 – Location", type: "text" },
+    { key: "course1Title", label: "Training / Course 1 – Title", type: "text" },
+    { key: "course1Text", label: "Training / Course 1 – Description", type: "textarea" },
+    { key: "course2Title", label: "Training / Course 2 – Title", type: "text" },
+    { key: "course2Text", label: "Training / Course 2 – Description", type: "textarea" },
+    { key: "int1Title", label: "Interest 1 – Title", type: "text" },
+    { key: "int1Text", label: "Interest 1 – Description", type: "textarea" },
+    { key: "int2Title", label: "Interest 2 – Title", type: "text" },
+    { key: "int2Text", label: "Interest 2 – Description", type: "textarea" },
+    { key: "lang1Name", label: "Language 1 – Name", type: "text" },
+    { key: "lang1Level", label: "Language 1 – Level", type: "text" },
+    { key: "lang1Rating", label: "Language 1 – Rating (0–5)", type: "number" },
+    { key: "lang2Name", label: "Language 2 – Name", type: "text" },
+    { key: "lang2Level", label: "Language 2 – Level", type: "text" },
+    { key: "lang2Rating", label: "Language 2 – Rating (0–5)", type: "number" },
+    { key: "lang3Name", label: "Language 3 – Name", type: "text" },
+    { key: "lang3Level", label: "Language 3 – Level", type: "text" },
+    { key: "lang3Rating", label: "Language 3 – Rating (0–5)", type: "number" }
   ]
 };
 
@@ -797,5 +1016,119 @@ export const mockData: DocumentDataMap = {
     doctorName: "DR. ONKAR RAI",
     doctorQualification: "M.D. (Medicine)",
     doctorRegNo: ""
+  },
+  "medical-certificate": {
+    logoPath: "/images/logos/bg_removed jospeh logo.png",
+    clinicName: "Dr. Joseph's Polyclinic, Karama",
+    clinicAddress: "Al Jaber Bldg., 1st & 2nd Floor, ADCB Metro Station, Exit 1,\nKarama, Dubai",
+    clinicPhone: "+971 4 337 8828\n+971 4 335 8426",
+    registrationLabel: "Member Registration No",
+    registrationNo: "AMBRIG00163235",
+    emiratesId: "",
+    dateOfBirth: "",
+    ageGender: "",
+    nationality: "",
+    patientPhone: "",
+    insuranceProvider: "",
+    memberPolicyNo: "",
+    company: "",
+    attendedAt: "Dr. Joseph Polyclinic (BR of Amber Clinics L.L.C)",
+    attendedOn: "Thursday Jul 30, 2026",
+    diagnosisCodes:
+      "R51.9 - Headache, unspecified\nG43.009 - Migraine w/o aura, not intractable, w/o status migrainosus",
+    closingStatement: "This is a certificate of attendance .",
+    specialty: "",
+    licenseLabel: "License No",
+    licenseNo: "DHA-P-0244087",
+    department: "MEDICINE",
+    addressLine:
+      "हनुमान मंदिर रोड, बेतियाहाता, गोरखपुर, फोन : 05512200698, 05517960339, 9839965677",
+    certificateNo: "MC/2026/0418",
+    date: "24/07/2026",
+    patientTitle: "Mrs.",
+    patientName: "ASHKANA SHARAFUDEEN",
+    ageYears: "36",
+    guardianName: "W/o Mr. Imran Ahmed",
+    address: "H. No. 214, Betiahata, Gorakhpur, Uttar Pradesh - 273001",
+    identificationMark: "Mole on the left forearm",
+    diagnosis: "G43.009 - Migraine without aura, not intractable, without status migrainosus.",
+    treatedFrom: "17/08/2026",
+    treatedTo: "18/08/2026",
+    restDays: "2 days",
+    fitFrom: "19/08/2026",
+    remarks: "Advised rest in a quiet, darkened room and avoidance of known migraine triggers.",
+    doctorName: "Dr T S Sateesh",
+    doctorQualification: "MBBS, DLO (GP)",
+    doctorRegNo: "DHA-P-0244087"
+  },
+  "resume": {
+    fullName: "Anderson Varghese",
+    jobTitle: "Fire & Safety Officer | Construction Site Safety | NEBOSH Certified",
+    phone: "9446144967",
+    email: "anderson.varghese@gmail.com",
+    location: "Thrissur, Kerala",
+    linkedin: "linkedin.com/in/anderson-varghese",
+    summary:
+      "Fire & Safety Officer with 6+ years of experience across construction sites in Kerala. Proven record includes an incident-free four-year project tenure, first-submission statutory audit clearances and safety training delivered to 200+ workers, backed by NEBOSH certification and strong documentation discipline.",
+    skills:
+      "Fire Risk Assessment\nEmergency Evacuation Planning\nFire Alarm & Sprinkler Systems\nSafety Audits & NBC Compliance\nFire Drills & Safety Training\nIncident Investigation & Reporting",
+    exp1Title: "Fire & Safety Officer",
+    exp1Company: "DATCO CIVIL",
+    exp1Period: "07/2021 - 12/2025",
+    exp1Location: "Thrissur, Kerala",
+    exp1Details:
+      "Supervised fire protection works for the Public Library construction project, covering alarm systems, hydrant lines and extinguisher placement.\nConducted weekly site inspections to ensure compliance with NBC and local fire authority guidelines.\nPlanned and led quarterly fire drills, cutting full-site evacuation time by 35%.\nMaintained audit-ready fire safety records that cleared every statutory inspection at first submission.",
+    exp2Title: "Safety Assistant",
+    exp2Company: "VKC Builders",
+    exp2Period: "06/2019 - 06/2021",
+    exp2Location: "Kochi, Kerala",
+    exp2Details:
+      "Ran daily toolbox talks and PPE compliance checks for a 120-worker residential site.\nTracked maintenance and accessibility of firefighting equipment across four active blocks.\nAssisted incident investigations and drafted corrective-action reports for management.",
+    exp3Title: "",
+    exp3Company: "",
+    exp3Period: "",
+    exp3Location: "",
+    exp3Details: "",
+    ach1Title: "Incident-Free Project Record",
+    ach1Text:
+      "Maintained zero lost-time fire incidents across the Public Library project, Thrissur, over a four-year site tenure.",
+    ach2Title: "Faster Emergency Response",
+    ach2Text:
+      "Cut full-site evacuation drill time by 35% through revised assembly-point planning and quarterly drills.",
+    ach3Title: "Audit-Ready Compliance",
+    ach3Text:
+      "Cleared every statutory fire authority inspection at first submission with complete, up-to-date documentation.",
+    ach4Title: "Workforce Safety Training",
+    ach4Text:
+      "Trained 200+ workers and staff in extinguisher handling, evacuation procedure and fire watch duties.",
+    edu1Degree: "Diploma in Fire & Industrial Safety",
+    edu1Institution: "St. Thomas Institute of Safety Management",
+    edu1Period: "2018 - 2019",
+    edu1Location: "Thrissur, Kerala",
+    edu2Degree: "B.Sc. Chemistry",
+    edu2Institution: "University of Calicut",
+    edu2Period: "2015 - 2018",
+    edu2Location: "Malappuram, Kerala",
+    course1Title: "NEBOSH International General Certificate",
+    course1Text:
+      "Internationally recognised certification covering hazard identification, risk assessment and control of workplace safety risks.",
+    course2Title: "First Aid & CPR – St. John Ambulance",
+    course2Text:
+      "Certified in emergency first response, CPR and casualty handling for construction site environments.",
+    int1Title: "Fire Safety Awareness",
+    int1Text:
+      "Running community and workplace awareness sessions on fire prevention, focused on building a prevention-first safety culture.",
+    int2Title: "Mentoring Junior Safety Staff",
+    int2Text:
+      "Coaching trainee safety assistants on inspection routines, documentation discipline and emergency preparedness.",
+    lang1Name: "Malayalam",
+    lang1Level: "Native",
+    lang1Rating: 5,
+    lang2Name: "English",
+    lang2Level: "Advanced",
+    lang2Rating: 4,
+    lang3Name: "Hindi",
+    lang3Level: "Intermediate",
+    lang3Rating: 3
   }
 };

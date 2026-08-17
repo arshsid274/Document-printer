@@ -10,21 +10,23 @@ interface SidebarProps {
 
 export default function Sidebar({ items, selected, onSelect }: SidebarProps) {
   return (
-    <aside className="no-print fixed left-0 top-0 h-screen w-[255px] overflow-y-auto border-r border-white/20 bg-gradient-to-b from-[#0e2854] to-[#153b79] text-white max-[1100px]:static max-[1100px]:h-auto max-[1100px]:w-full">
+    <aside className="no-print scrollbar-hide fixed left-0 top-0 h-screen w-[255px] overflow-y-auto bg-gradient-to-b from-rail-top to-rail-bottom text-white shadow-[4px_0_24px_rgba(17,32,61,0.18)] max-[1100px]:static max-[1100px]:h-auto max-[1100px]:w-full">
       <div className="p-6">
-        <h1 className="m-0 text-[1.35rem] tracking-[0.2px]">Document Printer</h1>
-        <p className="mb-5 mt-2 text-sm text-white/85">Choose a document type</p>
+        <h1 className="m-0 text-headline-md leading-tight text-white">Document Printer</h1>
+        <p className="mb-6 mt-1.5 font-mono text-label-mono uppercase tracking-[0.14em] text-white/60">
+          Choose a document type
+        </p>
 
-        <nav className="flex flex-col gap-2.5" aria-label="Document types">
+        <nav className="flex flex-col gap-1.5" aria-label="Document types">
           {items.map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => onSelect(item.id)}
-              className={`rounded-[10px] border px-3 py-2.5 text-left transition-colors ${
+              className={`rounded-full px-4 py-2.5 text-left font-mono text-label-mono transition-all duration-200 active:scale-[0.98] ${
                 selected === item.id
-                  ? "border-white bg-white font-semibold text-[#11315f]"
-                  : "border-white/25 bg-white/10 text-white hover:bg-white/15"
+                  ? "bg-white font-bold text-nav-active shadow-[0_2px_8px_rgba(0,0,0,0.18)]"
+                  : "text-white/80 hover:bg-white/10 hover:text-white"
               }`}
             >
               {item.label}

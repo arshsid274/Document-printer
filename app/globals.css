@@ -3,6 +3,19 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Clinical Print Studio palette */
+    --studio-mist: #f0f4f9;
+    --paper-white: #ffffff;
+    --border-whisper: #e2e8f0;
+    --muted-steel: #64748b;
+    --charcoal-slate: #111c2d;
+    --calibrated-blue: #1958b7;
+    --primary-deep: #004192;
+    --rail-top: #0e2854;
+    --rail-bottom: #153b79;
+  }
+
   * {
     @apply box-border;
   }
@@ -13,14 +26,98 @@
   }
 
   body {
-    @apply min-h-screen bg-[radial-gradient(circle_at_15%_20%,#fefefe_0%,#f3f5f9_48%,#ecf0f7_100%)] text-slate-800;
+    @apply min-h-screen text-on-surface;
+    /* Studio Mist desk surface with an overhead-lighting wash from centre-top */
+    background-color: var(--studio-mist);
+    background-image: radial-gradient(
+      130% 90% at 50% 0%,
+      #ffffff 0%,
+      #f7f9fd 45%,
+      #eaf0f8 100%
+    );
+    background-attachment: fixed;
+    font-family: "Geist", "Segoe UI", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* The A4 sheet is a print artefact, not app chrome: it keeps the original
+     typographic stack so every template renders exactly as it did before. */
+  #print-root {
     font-family: "Segoe UI", Arial, sans-serif;
+    color: #1e293b; /* slate-800, the colour templates inherited before */
   }
 
   button,
   input,
   textarea {
     font: inherit;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Slim visible scrollbar for the two content columns. They scroll
+     independently, so hiding the bar leaves no clue there is more below. */
+  .studio-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #c3c6d4 transparent;
+  }
+
+  .studio-scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .studio-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .studio-scroll::-webkit-scrollbar-thumb {
+    background-color: #c3c6d4;
+    background-clip: content-box;
+    border: 3px solid transparent;
+    border-radius: 9999px;
+  }
+
+  .studio-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: #737784;
+    background-clip: content-box;
+  }
+}
+
+/* Physical depth: the sheet floats above the mist and "breathes" slowly. */
+.paper-sheet {
+  box-shadow: 0 16px 30px rgba(17, 32, 61, 0.12);
+  animation: paper-breathe 8s ease-in-out infinite;
+}
+
+@keyframes paper-breathe {
+  0%,
+  100% {
+    box-shadow: 0 16px 30px rgba(17, 32, 61, 0.12);
+  }
+  50% {
+    box-shadow: 0 20px 40px rgba(17, 32, 61, 0.16);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-sheet {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
   }
 }
 
@@ -39,6 +136,20 @@
 
   body {
     background: #ffffff;
+    background-image: none !important;
+  }
+
+  .paper-sheet {
+    box-shadow: none !important;
+    animation: none !important;
+  }
+
+  /* The preview column is a fixed-height scroll box on screen - undo that for
+     print so a sheet taller than the viewport is never clipped. */
+  .preview-stage {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
 
   #print-root {

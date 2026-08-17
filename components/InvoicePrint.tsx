@@ -52,14 +52,14 @@ export default function InvoicePrint({ children }: InvoicePrintProps) {
         <button
           type="button"
           onClick={() => handlePrint?.()}
-          className="cursor-pointer rounded-[10px] bg-gradient-to-r from-[#1958b7] to-[#0b80aa] px-5 py-2.5 font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+          className="cursor-pointer rounded-full bg-gradient-to-r from-[#1958b7] to-[#0b80aa] px-6 py-3 text-body-sm font-bold uppercase tracking-[0.08em] text-white shadow-[0_4px_14px_rgba(25,88,183,0.30)] transition-all hover:opacity-90 active:scale-95"
         >
           Print PDF
         </button>
       </div>
 
       {/* Visual wrapper (screen only): overflow-hidden clips corners on screen */}
-      <div className="mx-auto w-full max-w-[190mm] overflow-hidden rounded-md bg-white shadow-[0_16px_30px_rgba(17,32,61,0.12)] max-[700px]:max-w-full">
+      <div className="paper-sheet mx-auto w-full max-w-[190mm] overflow-hidden rounded-[2px] bg-white max-[700px]:max-w-full">
         {/* Print target: no overflow-hidden so footer bar is never clipped */}
         <div ref={printRef} id="print-root">
           {children}

@@ -350,6 +350,166 @@ export interface MedicalCertificateData {
   doctorName: string;
   doctorQualification: string;
   doctorRegNo: string;
+  /* Aaditya OPD generated consultation sheet (Template 3) */
+  aadityaLogoPath: string;
+  aadityaCentreNameHi: string;
+  aadityaCentreNameEn: string;
+  aadityaAddressHi: string;
+  aadityaAddressEn: string;
+  aadityaMobile: string;
+  aadityaDoc1NameHi: string;
+  aadityaDoc1NameEn: string;
+  aadityaDoc1Quals: string;
+  aadityaDoc1SpecHi: string;
+  aadityaDoc1SpecEn: string;
+  aadityaDoc1CredentialsHi: string;
+  aadityaDoc1CredentialsEn: string;
+  aadityaDoc1Reg: string;
+  aadityaDoc2NameHi: string;
+  aadityaDoc2NameEn: string;
+  aadityaDoc2Quals: string;
+  aadityaDoc2SpecHi: string;
+  aadityaDoc2SpecEn: string;
+  aadityaDoc2CredentialsHi: string;
+  aadityaDoc2CredentialsEn: string;
+  aadityaDoc2Reg: string;
+  aadityaTimingLeftHi: string;
+  aadityaTimingLeftEn: string;
+  aadityaTimingCentreHi: string;
+  aadityaTimingCentreEn: string;
+  aadityaTimingRightHi: string;
+  aadityaTimingRightEn: string;
+  aadityaRegNo: string;
+  aadityaPatientId: string;
+  aadityaOpdDate: string;
+  aadityaTokenNo: string;
+  aadityaWeight: string;
+  aadityaBp: string;
+  aadityaPatientName: string;
+  aadityaAgeSex: string;
+  aadityaGuardian: string;
+  aadityaAddress: string;
+  aadityaConsultDoctor: string;
+  aadityaProvisionalDiagnosis: string;
+  aadityaAdmissionAdvice: string;
+  aadityaClinicalNotes: string;
+  aadityaInvestigations: string;
+  aadityaDiagnosisTyped: string;
+  aadityaSurgeryAdvice: string;
+  aadityaMedicationAdvice: string;
+  aadityaReviewLineHi: string;
+  aadityaReviewLineEn: string;
+  aadityaFooterNoteHi: string;
+  aadityaFooterNoteEn: string;
+  aadityaHolidayHi: string;
+  aadityaHolidayEn: string;
+  aadityaLegalNotesHi: string;
+  aadityaLegalNotesEn: string;
+}
+
+export interface MedicalSlipData {
+  [key: string]: string | number;
+  logoPath: string;
+  centreName: string;
+  addressLine: string;
+  supplyType: string;
+  pageLabel: string;
+  /* Sale Bill (Template 1) */
+  gstin: string;
+  dlNo: string;
+  billTitle: string;
+  uhidNo: string;
+  billNo: string;
+  billDate: string;
+  printDate: string;
+  paymentMode: string;
+  ipNo: string;
+  location: string;
+  createdBy: string;
+  rowsFirstPage: number;
+  rowsPerPage: number;
+  /* OPD consultation letterhead (Template 3) */
+  opdCentreName: string;
+  opdCentreAddress: string;
+  opdCentreMobile: string;
+  opdDoc1Name: string;
+  opdDoc1Quals: string;
+  opdDoc1Spec: string;
+  opdDoc1Credentials: string;
+  opdDoc1Reg: string;
+  opdDoc2Name: string;
+  opdDoc2Quals: string;
+  opdDoc2Spec: string;
+  opdDoc2Credentials: string;
+  opdDoc2Reg: string;
+  opdTimingLeft: string;
+  opdTimingCentreHindi: string;
+  opdTimingCentre: string;
+  opdTimingRight: string;
+  opdRegNo: string;
+  opdPatientId: string;
+  opdDate: string;
+  opdTokenNo: string;
+  opdWeight: string;
+  opdBp: string;
+  opdGuardian: string;
+  opdDoctorName: string;
+  opdDiagnosis: string;
+  opdReviewLine: string;
+  opdFooterNote: string;
+  opdLegalNotes: string;
+  opdHolidayNote: string;
+  /* Pathology report (Template 4) */
+  labLogoPath: string;
+  labName: string;
+  labAddress: string;
+  labPhone: string;
+  labPatientName: string;
+  labRefByDoctor: string;
+  labReportDate: string;
+  labSampleNo: string;
+  labResults: string;
+  labSignatoryName: string;
+  labSignatoryQualification: string;
+  labDisclaimer: string;
+  /* Radiology report (Template 5) */
+  radLogoPath: string;
+  radIsoPath: string;
+  radCentreName: string;
+  radTagline: string;
+  radTaglineHindi: string;
+  radAddress: string;
+  radReportLabel: string;
+  radIdNo: string;
+  radReportDate: string;
+  radPatientName: string;
+  radAgeSex: string;
+  radRefBy: string;
+  radStudyTitle: string;
+  radFindings: string;
+  radAdviceLabel: string;
+  radAdvice: string;
+  radSignatoryName: string;
+  radSignatoryQualification: string;
+  radDisclaimer: string;
+  radFacilitiesHeading: string;
+  radFacilities: string;
+  /* One line per row: NAME | HSN | CATEGORY | BATCH | EXPIRY | RATE | QTY | GST% | AMOUNT?
+     AMOUNT is optional - left blank it is computed as rate x qty x (1 + gst/100). */
+  items: string;
+  /* Template 2 - Clinical Summary intake sheet */
+  summaryTitle: string;
+  udNo: string;
+  opNo: string;
+  visitDate: string;
+  patientName: string;
+  ageSex: string;
+  patType: string;
+  patientAddress: string;
+  consultant: string;
+  /* "# Heading" starts a section; other lines are "left symptom | right symptom" */
+  sections: string;
+  previousIllnessRows: number;
 }
 
 export interface DocumentDataMap {
@@ -364,6 +524,7 @@ export interface DocumentDataMap {
   "ultrasound-report": UltrasoundReportData;
   "prescription": PrescriptionData;
   "medical-certificate": MedicalCertificateData;
+  "medical-slip": MedicalSlipData;
   "resume": ResumeData;
 }
 
@@ -399,6 +560,7 @@ export const documentOptions: SidebarOption[] = [
   { id: "ultrasound-report", label: "Ultrasound Report" },
   { id: "prescription", label: "Prescription" },
   { id: "medical-certificate", label: "Medical Certificate" },
+  { id: "medical-slip", label: "Medical Slip" },
   { id: "microsoft-sales-chat", label: "Microsoft Sales Chat" }
 ];
 
@@ -426,7 +588,15 @@ export const templateRegistry: Record<DocumentType, TemplateMeta[]> = {
   ],
   "medical-certificate": [
     { id: "template1", label: "Template 1 (Certificate of Attendance)" },
-    { id: "template2", label: "Template 2 (Fitness – Park Hospital)" }
+    { id: "template2", label: "Template 2 (Fitness – Park Hospital)" },
+    { id: "template3", label: "Template 3 (Aaditya OPD Generated)" }
+  ],
+  "medical-slip": [
+    { id: "template1", label: "Template 1 (Itemised Supply Slip)" },
+    { id: "template2", label: "Template 2 (Clinical Summary)" },
+    { id: "template3", label: "Template 3 (OPD Letterhead)" },
+    { id: "template4", label: "Template 4 (Pathology Report)" },
+    { id: "template5", label: "Template 5 (Radiology Report)" }
   ],
   "resume": [{ id: "template1", label: "Template 1" }]
 };
@@ -443,6 +613,7 @@ export const defaultTemplateSelection: Record<DocumentType, string> = {
   "ultrasound-report": "template1",
   "prescription": "template1",
   "medical-certificate": "template1",
+  "medical-slip": "template1",
   "resume": "template1"
 };
 
@@ -717,7 +888,176 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     { key: "remarks", label: "Remarks", type: "textarea" },
     { key: "doctorName", label: "Doctor's Name", type: "text" },
     { key: "doctorQualification", label: "Doctor's Qualification", type: "text" },
-    { key: "doctorRegNo", label: "Registration No.", type: "text" }
+    { key: "doctorRegNo", label: "Registration No.", type: "text" },
+    /* -- Template 3 – Aaditya generated OPD sheet -- */
+    { key: "aadityaLogoPath", label: "Aaditya: Logo path", type: "text" },
+    { key: "aadityaCentreNameHi", label: "Aaditya: Centre name (Hindi)", type: "text" },
+    { key: "aadityaCentreNameEn", label: "Aaditya: Centre name (English)", type: "text" },
+    { key: "aadityaAddressHi", label: "Aaditya: Address (Hindi)", type: "text" },
+    { key: "aadityaAddressEn", label: "Aaditya: Address (English)", type: "text" },
+    { key: "aadityaMobile", label: "Aaditya: Mobile", type: "text" },
+    { key: "aadityaDoc1NameHi", label: "Aaditya: Doctor 1 name (Hindi)", type: "text" },
+    { key: "aadityaDoc1NameEn", label: "Aaditya: Doctor 1 name (English)", type: "text" },
+    { key: "aadityaDoc1Quals", label: "Aaditya: Doctor 1 degrees", type: "text" },
+    { key: "aadityaDoc1SpecHi", label: "Aaditya: Doctor 1 speciality (Hindi)", type: "text" },
+    { key: "aadityaDoc1SpecEn", label: "Aaditya: Doctor 1 speciality (English)", type: "text" },
+    { key: "aadityaDoc1CredentialsHi", label: "Aaditya: Doctor 1 credentials (Hindi)", type: "textarea" },
+    { key: "aadityaDoc1CredentialsEn", label: "Aaditya: Doctor 1 credentials (English)", type: "textarea" },
+    { key: "aadityaDoc1Reg", label: "Aaditya: Doctor 1 reg. no.", type: "text" },
+    { key: "aadityaDoc2NameHi", label: "Aaditya: Doctor 2 name (Hindi)", type: "text" },
+    { key: "aadityaDoc2NameEn", label: "Aaditya: Doctor 2 name (English)", type: "text" },
+    { key: "aadityaDoc2Quals", label: "Aaditya: Doctor 2 degrees", type: "text" },
+    { key: "aadityaDoc2SpecHi", label: "Aaditya: Doctor 2 speciality (Hindi)", type: "text" },
+    { key: "aadityaDoc2SpecEn", label: "Aaditya: Doctor 2 speciality (English)", type: "text" },
+    { key: "aadityaDoc2CredentialsHi", label: "Aaditya: Doctor 2 credentials (Hindi)", type: "textarea" },
+    { key: "aadityaDoc2CredentialsEn", label: "Aaditya: Doctor 2 credentials (English)", type: "textarea" },
+    { key: "aadityaDoc2Reg", label: "Aaditya: Doctor 2 reg. no.", type: "text" },
+    { key: "aadityaTimingLeftHi", label: "Aaditya: Timing left (Hindi)", type: "textarea" },
+    { key: "aadityaTimingLeftEn", label: "Aaditya: Timing left (English)", type: "textarea" },
+    { key: "aadityaTimingCentreHi", label: "Aaditya: Timing centre (Hindi)", type: "text" },
+    { key: "aadityaTimingCentreEn", label: "Aaditya: Timing centre (English)", type: "text" },
+    { key: "aadityaTimingRightHi", label: "Aaditya: Timing right (Hindi)", type: "textarea" },
+    { key: "aadityaTimingRightEn", label: "Aaditya: Timing right (English)", type: "textarea" },
+    { key: "aadityaRegNo", label: "Aaditya: Reg. no.", type: "text" },
+    { key: "aadityaPatientId", label: "Aaditya: Patient ID", type: "text" },
+    { key: "aadityaTokenNo", label: "Aaditya: Token no.", type: "text" },
+    { key: "aadityaPatientName", label: "Aaditya: Patient name", type: "text" },
+    { key: "aadityaAgeSex", label: "Aaditya: Age / sex", type: "text" },
+    { key: "aadityaGuardian", label: "Aaditya: Guardian", type: "text" },
+    { key: "aadityaAddress", label: "Aaditya: Patient address", type: "text" },
+    { key: "aadityaConsultDoctor", label: "Aaditya: Consultation doctor", type: "text" },
+    { key: "aadityaOpdDate", label: "Aaditya: OPD date", type: "text" },
+    { key: "aadityaWeight", label: "Aaditya: Weight", type: "text" },
+    { key: "aadityaBp", label: "Aaditya: BP", type: "text" },
+    { key: "aadityaProvisionalDiagnosis", label: "Aaditya: Provisional diagnosis", type: "text" },
+    { key: "aadityaAdmissionAdvice", label: "Aaditya: Admission advice", type: "textarea" },
+    { key: "aadityaClinicalNotes", label: "Aaditya: Clinical notes", type: "textarea" },
+    { key: "aadityaInvestigations", label: "Aaditya: Investigations", type: "textarea" },
+    { key: "aadityaDiagnosisTyped", label: "Aaditya: Diagnosis typed", type: "textarea" },
+    { key: "aadityaSurgeryAdvice", label: "Aaditya: Surgery / procedure advice", type: "textarea" },
+    { key: "aadityaMedicationAdvice", label: "Aaditya: Medication advice", type: "textarea" },
+    { key: "aadityaReviewLineHi", label: "Aaditya: Review line (Hindi)", type: "text" },
+    { key: "aadityaReviewLineEn", label: "Aaditya: Review line (English)", type: "text" },
+    { key: "aadityaFooterNoteHi", label: "Aaditya: Footer note (Hindi)", type: "text" },
+    { key: "aadityaFooterNoteEn", label: "Aaditya: Footer note (English)", type: "text" },
+    { key: "aadityaHolidayHi", label: "Aaditya: Holiday (Hindi)", type: "text" },
+    { key: "aadityaHolidayEn", label: "Aaditya: Holiday (English)", type: "text" },
+    { key: "aadityaLegalNotesHi", label: "Aaditya: Legal notes (Hindi)", type: "textarea" },
+    { key: "aadityaLegalNotesEn", label: "Aaditya: Legal notes (English)", type: "textarea" }
+  ],
+  "medical-slip": [
+    { key: "centreName", label: "Centre Name (header)", type: "text" },
+    { key: "addressLine", label: "Address Line", type: "text" },
+    { key: "logoPath", label: "Logo path", type: "text" },
+    { key: "supplyType", label: "Supply Type (Intra-state / Inter-state)", type: "text" },
+    { key: "gstin", label: "GSTIN", type: "text" },
+    { key: "dlNo", label: "DL No", type: "text" },
+    { key: "billTitle", label: "Bill Title", type: "text" },
+    { key: "uhidNo", label: "UHID No", type: "text" },
+    { key: "billNo", label: "Bill No", type: "text" },
+    { key: "billDate", label: "Bill Date", type: "text" },
+    { key: "printDate", label: "Print Date", type: "text" },
+    { key: "paymentMode", label: "Payment Mode", type: "text" },
+    { key: "ipNo", label: "IP No", type: "text" },
+    { key: "location", label: "Location (ward / room)", type: "text" },
+    { key: "createdBy", label: "Created By", type: "text" },
+    { key: "rowsFirstPage", label: "Item rows on page 1", type: "number" },
+    { key: "rowsPerPage", label: "Item rows on later pages", type: "number" },
+    /* -- Template 3: OPD letterhead -- */
+    { key: "opdCentreName", label: "OPD: Centre Name (Hindi)", type: "text" },
+    { key: "opdCentreAddress", label: "OPD: Centre Address (Hindi)", type: "text" },
+    { key: "opdCentreMobile", label: "OPD: Mobile line", type: "text" },
+    { key: "opdDoc1Name", label: "OPD: Doctor 1 Name", type: "text" },
+    { key: "opdDoc1Quals", label: "OPD: Doctor 1 Degrees", type: "text" },
+    { key: "opdDoc1Spec", label: "OPD: Doctor 1 Speciality", type: "text" },
+    { key: "opdDoc1Credentials", label: "OPD: Doctor 1 Past posts (one per line)", type: "textarea" },
+    { key: "opdDoc1Reg", label: "OPD: Doctor 1 Reg. No.", type: "text" },
+    { key: "opdDoc2Name", label: "OPD: Doctor 2 Name", type: "text" },
+    { key: "opdDoc2Quals", label: "OPD: Doctor 2 Degrees", type: "text" },
+    { key: "opdDoc2Spec", label: "OPD: Doctor 2 Speciality", type: "text" },
+    { key: "opdDoc2Credentials", label: "OPD: Doctor 2 Past posts (one per line)", type: "textarea" },
+    { key: "opdDoc2Reg", label: "OPD: Doctor 2 Reg. No.", type: "text" },
+    { key: "opdTimingLeft", label: "OPD: Timing box - left", type: "textarea" },
+    { key: "opdTimingCentreHindi", label: "OPD: Timing box - centre (Hindi)", type: "text" },
+    { key: "opdTimingCentre", label: "OPD: Timing box - centre (English)", type: "text" },
+    { key: "opdTimingRight", label: "OPD: Timing box - right", type: "textarea" },
+    { key: "opdRegNo", label: "OPD: Reg. No.", type: "text" },
+    { key: "opdPatientId", label: "OPD: Patient ID", type: "text" },
+    { key: "opdDate", label: "OPD: Date", type: "text" },
+    { key: "opdTokenNo", label: "OPD: Token No", type: "text" },
+    { key: "opdWeight", label: "OPD: Weight", type: "text" },
+    { key: "opdBp", label: "OPD: BP", type: "text" },
+    { key: "opdGuardian", label: "OPD: Guardian", type: "text" },
+    { key: "opdDoctorName", label: "OPD: Doctor Name (consultation)", type: "text" },
+    { key: "opdDiagnosis", label: "OPD: Provisional Diagnosis", type: "text" },
+    { key: "opdReviewLine", label: "OPD: Review line", type: "text" },
+    { key: "opdFooterNote", label: "OPD: Footer note (left of holiday)", type: "text" },
+    { key: "opdLegalNotes", label: "OPD: Legal notes (one per line)", type: "textarea" },
+    { key: "opdHolidayNote", label: "OPD: Holiday note", type: "text" },
+    /* -- Template 4: pathology report -- */
+    { key: "labLogoPath", label: "LAB: Emblem path", type: "text" },
+    { key: "labName", label: "LAB: Lab Name (banner)", type: "text" },
+    { key: "labAddress", label: "LAB: Address (banner)", type: "text" },
+    { key: "labPhone", label: "LAB: Phone", type: "text" },
+    { key: "labPatientName", label: "LAB: Pt's Name", type: "text" },
+    { key: "labRefByDoctor", label: "LAB: Ref. By Dr.", type: "text" },
+    { key: "labReportDate", label: "LAB: Report Date", type: "text" },
+    { key: "labSampleNo", label: "LAB: Sample No.", type: "text" },
+    {
+      key: "labResults",
+      label: "LAB: Results - #Section / >Sub / *Note / NAME | VALUE | UNIT | FLAG | REF",
+      type: "textarea"
+    },
+    { key: "labSignatoryName", label: "LAB: Signatory Name", type: "text" },
+    { key: "labSignatoryQualification", label: "LAB: Signatory Qualification", type: "text" },
+    { key: "labDisclaimer", label: "LAB: Footer disclaimer", type: "text" },
+    /* -- Template 5: radiology report -- */
+    { key: "radLogoPath", label: "RAD: Logo path", type: "text" },
+    { key: "radIsoPath", label: "RAD: ISO mark path", type: "text" },
+    { key: "radCentreName", label: "RAD: Centre name (alt text)", type: "text" },
+    { key: "radTagline", label: "RAD: Tagline (English)", type: "text" },
+    { key: "radTaglineHindi", label: "RAD: Tagline (Hindi)", type: "text" },
+    { key: "radAddress", label: "RAD: Address block (one per line)", type: "textarea" },
+    { key: "radReportLabel", label: "RAD: Report tab label", type: "text" },
+    { key: "radIdNo", label: "RAD: I.D. No", type: "text" },
+    { key: "radReportDate", label: "RAD: Report date", type: "text" },
+    { key: "radPatientName", label: "RAD: Patient name", type: "text" },
+    { key: "radAgeSex", label: "RAD: Age / Sex", type: "text" },
+    { key: "radRefBy", label: "RAD: Ref. By", type: "text" },
+    { key: "radStudyTitle", label: "RAD: Study title", type: "text" },
+    { key: "radFindings", label: "RAD: Findings (one paragraph per line)", type: "textarea" },
+    { key: "radAdviceLabel", label: "RAD: Advice label", type: "text" },
+    { key: "radAdvice", label: "RAD: Advice", type: "text" },
+    { key: "radSignatoryName", label: "RAD: Signatory name", type: "text" },
+    { key: "radSignatoryQualification", label: "RAD: Signatory qualification", type: "text" },
+    { key: "radDisclaimer", label: "RAD: Footer disclaimer banner", type: "text" },
+    { key: "radFacilitiesHeading", label: "RAD: Facilities heading (Hindi)", type: "text" },
+    {
+      key: "radFacilities",
+      label: "RAD: Facilities - IMAGE | CAPTION | bullet ; bullet ; bullet",
+      type: "textarea"
+    },
+    { key: "pageLabel", label: "Page Label format ({n} of {m})", type: "text" },
+    {
+      key: "items",
+      label: "Items - one per line: NAME | HSN | CATEGORY | BATCH | EXPIRY | RATE | QTY | GST% | AMOUNT(optional)",
+      type: "textarea"
+    },
+    { key: "summaryTitle", label: "Summary Title", type: "text" },
+    { key: "udNo", label: "UD No", type: "text" },
+    { key: "opNo", label: "OP No", type: "text" },
+    { key: "visitDate", label: "Date", type: "text" },
+    { key: "patientName", label: "Patient Name", type: "text" },
+    { key: "ageSex", label: "Age / Sex", type: "text" },
+    { key: "patType", label: "Pat. Type", type: "text" },
+    { key: "patientAddress", label: "Patient Address", type: "text" },
+    { key: "consultant", label: "Consultant", type: "text" },
+    {
+      key: "sections",
+      label: "Symptom sections - \"# Heading\" starts a section, then \"left | right\" per row",
+      type: "textarea"
+    },
+    { key: "previousIllnessRows", label: "Previous Illnesses - blank row count", type: "number" }
   ],
   "resume": [
     { key: "fullName", label: "Full Name", type: "text" },
@@ -1023,11 +1363,11 @@ export const mockData: DocumentDataMap = {
     clinicAddress: "Al Jaber Bldg., 1st & 2nd Floor, ADCB Metro Station, Exit 1,\nKarama, Dubai",
     clinicPhone: "+971 4 337 8828\n+971 4 335 8426",
     registrationLabel: "Member Registration No",
-    registrationNo: "AMBRIG00163235",
+    registrationNo: "REG00012345",
     emiratesId: "",
-    dateOfBirth: "",
-    ageGender: "",
-    nationality: "",
+    dateOfBirth: "12/03/1984",
+    ageGender: "42 / Female",
+    nationality: "India",
     patientPhone: "",
     insuranceProvider: "",
     memberPolicyNo: "",
@@ -1046,8 +1386,8 @@ export const mockData: DocumentDataMap = {
     certificateNo: "MC/2026/0418",
     date: "24/07/2026",
     patientTitle: "Mrs.",
-    patientName: "ASHKANA SHARAFUDEEN",
-    ageYears: "36",
+    patientName: "ANJUM FATIMA",
+    ageYears: "42",
     guardianName: "W/o Mr. Imran Ahmed",
     address: "H. No. 214, Betiahata, Gorakhpur, Uttar Pradesh - 273001",
     identificationMark: "Mole on the left forearm",
@@ -1059,7 +1399,180 @@ export const mockData: DocumentDataMap = {
     remarks: "Advised rest in a quiet, darkened room and avoidance of known migraine triggers.",
     doctorName: "Dr T S Sateesh",
     doctorQualification: "MBBS, DLO (GP)",
-    doctorRegNo: "DHA-P-0244087"
+    doctorRegNo: "DHA-P-0244087",
+    aadityaLogoPath: "/images/logos/aaditya-logo.png",
+    aadityaCentreNameHi: "आदित्य यूरोलाजी सेन्टर एण्ड मैटरनिटी होम",
+    aadityaCentreNameEn: "Aaditya Urology Centre and Maternity Home",
+    aadityaAddressHi: "10 नं0 बोरिंग बनकटवा रोड, गोरखनाथ, गोरखपुर",
+    aadityaAddressEn: "10 No. Boring Bankatwa Road, Gorakhnath, Gorakhpur",
+    aadityaMobile: "Mo.: 9956390836, 8354885346",
+    aadityaDoc1NameHi: "डा0 अरविन्द तिवारी",
+    aadityaDoc1NameEn: "Dr. Arvind Tiwari",
+    aadityaDoc1Quals: "M.B.B.S., M.S., M.Ch., D.N.B.",
+    aadityaDoc1SpecHi: "(यूरोलाजिस्ट सर्जन)",
+    aadityaDoc1SpecEn: "(Urologist Surgeon)",
+    aadityaDoc1CredentialsHi:
+      "पूर्व : वरिष्ठ रेजिडेन्ट\nके0 जी0 एम0 सी0, लखनऊ\nएस0 एल0 जे0 हास्पिटल, नई दिल्ली\nसी0 एम0 सी0, वैलोर\nजिपमेर, पाण्डीचेरी",
+    aadityaDoc1CredentialsEn:
+      "Former Senior Resident\nK.G.M.C., Lucknow\nS.L.J. Hospital, New Delhi\nC.M.C., Vellore\nJIPMER, Pondicherry",
+    aadityaDoc1Reg: "Reg. No. 36482 (MCI-UP)",
+    aadityaDoc2NameHi: "डा0 पूनम तिवारी",
+    aadityaDoc2NameEn: "Dr. Poonam Tiwari",
+    aadityaDoc2Quals: "M.B.B.S., D.G.O. (Lucknow)",
+    aadityaDoc2SpecHi: "(स्त्री एवं प्रसूति रोग विशेषज्ञ)",
+    aadityaDoc2SpecEn: "(Gynaecology and Obstetrics Specialist)",
+    aadityaDoc2CredentialsHi:
+      "पूर्व : रेजिडेन्ट डाक्टर\nके0 जी0 एम0 सी0, लखनऊ\nपरामर्श चिकित्सक\nगवर्नमेंट मैटरनिटी हॉस्पिटल, पाण्डीचेरी",
+    aadityaDoc2CredentialsEn:
+      "Former Resident Doctor\nK.G.M.C., Lucknow\nConsultant Physician\nGovernment Maternity Hospital, Pondicherry",
+    aadityaDoc2Reg: "Reg. No. 040728 (MCI-UP)",
+    aadityaTimingLeftHi: "परामर्श समय :\nसोमवार से शनिवार\nदोपहर 2 बजे से 7 बजे तक",
+    aadityaTimingLeftEn: "Consultation Time:\nMonday to Saturday\n2:00 PM to 7:00 PM",
+    aadityaTimingCentreHi: "कृपया पहले से समय लेकर आयें",
+    aadityaTimingCentreEn: "Consultation By Appointment",
+    aadityaTimingRightHi:
+      "परामर्श समय :\nसोमवार से शुक्रवार\nदोपहर 11 बजे से 5 बजे तक\nशनिवार - दोपहर 12 बजे से 3 बजे तक",
+    aadityaTimingRightEn:
+      "Consultation Time:\nMonday to Friday\n11:00 AM to 5:00 PM\nSaturday - 12:00 PM to 3:00 PM",
+    aadityaRegNo: "23240030110",
+    aadityaPatientId: "23240006255",
+    aadityaOpdDate: "11-Jul-2023 10:54 AM",
+    aadityaTokenNo: "14",
+    aadityaWeight: "76 kg",
+    aadityaBp: "147/95",
+    aadityaPatientName: "Mr RAJSAGAR",
+    aadityaAgeSex: "25 Y/Male",
+    aadityaGuardian: "BHARAT PRASAD",
+    aadityaAddress: "JAFRA BAZAR, Gorakhpur",
+    aadityaConsultDoctor: "Dr. Arvind Tiwari",
+    aadityaProvisionalDiagnosis: "Right ureteric calculus with renal colic",
+    aadityaAdmissionAdvice: "Admission advised in Urology Ward\nभर्ती की सलाह - यूरोलॉजी वार्ड",
+    aadityaClinicalNotes:
+      "DTPA renal scan advised\nHydronephrotic right kidney\nRelative renal function: 25%\nRight PUJ obstruction\nNon-obstructive / normal functioning left kidney",
+    aadityaInvestigations: "USG / PCNL profile\nRIRS fitness",
+    aadityaDiagnosisTyped:
+      "Right upper ureteric stone\nPoorly functioning right kidney",
+    aadityaSurgeryAdvice:
+      "Surgical profile\nCardiology consent\nURS / PCNL planned",
+    aadityaMedicationAdvice:
+      "Rx generated digitally\nAnalgesic and antibiotic as advised\nReview with reports",
+    aadityaReviewLineHi: "दिन के बाद दिखाना है।",
+    aadityaReviewLineEn: "Review after 5 days.",
+    aadityaFooterNoteHi:
+      "नोट - रिपोर्ट दिखाने का समय दोपहर 3 से 5 बजे तक / एम्बुलेंस सुविधा 24 घण्टे उपलब्ध",
+    aadityaFooterNoteEn:
+      "Report review time: 3 PM to 5 PM / Ambulance facility available 24 hours",
+    aadityaHolidayHi: "रविवार अवकाश",
+    aadityaHolidayEn: "Sunday Holiday",
+    aadityaLegalNotesHi:
+      "इस प्रतिष्ठान से सम्बन्धित किसी भी विवाद का निस्तारण केवल गोरखपुर न्याय क्षेत्र के अधीन होगा।\nडाक्टर द्वारा लिखी गयी किसी भी दवा एवं सूई से कोई परेशानी होने पर दवा रोक कर हॉस्पिटल में सम्पर्क करें।",
+    aadityaLegalNotesEn:
+      "Any dispute related to this establishment shall be subject to Gorakhpur jurisdiction only.\nIf any prescribed medicine or injection causes discomfort, stop it and contact the hospital."
+  },
+  "medical-slip": {
+    logoPath: "/images/logos/aaditya-logo.png",
+    centreName: "Aaditya Urology Center and maternity Home",
+    addressLine:
+      "310, Bankatwa Road, 10 No. Boring, Gorakhnath, Gorakhpur, Uttar Pradesh 273015",
+    summaryTitle: "Clinical Summary",
+    udNo: "UD-2231222",
+    opNo: "OP-00012345678",
+    visitDate: "24-Jul-2026",
+    patientName: "Mrs. ANJUM FATIMA",
+    ageSex: "42 Y/Female",
+    patType: "Normal",
+    patientAddress: "Betiahata, Gorakhpur, Uttar Pradesh",
+    consultant: "Dr. Onkar Rai (M.D.MED.)",
+    previousIllnessRows: 8,
+    sections:
+      "# Lower Urinary Trace\nThin Stream | Frequency = 10 days\nPoor Flow | Hesitancy\nIntermittency | Urgency = 10 days\nTerminal Dribble | Urge Incontinence\nFeeling of Incomplete Voiding | Dysuria = 10 days\nUrinary Retention | Nocturia\n | Incontinence\n# Upper Urinary Trace\nPain = 20 days |\nFever = 4 days |\nOedema |",
+    supplyType: "Intra-state",
+    gstin: "09AAACA0000A1Z0",
+    dlNo: "UP/GKP/2020/20-B/21-B",
+    billTitle: "Sale Bill",
+    uhidNo: "UD-00012345678",
+    billNo: "SB-4246",
+    billDate: "19-Aug-2026 01:41 PM",
+    printDate: "19-Aug-2026 01:41 PM",
+    paymentMode: "Cash",
+    ipNo: "IP-00000000531",
+    location: "2F/Private Room/PVT 07/1",
+    createdBy: "Mr Sanjay Singh",
+    pageLabel: "Page {n} of {m}",
+    rowsFirstPage: 29,
+    rowsPerPage: 33,
+    opdCentreName: "आदित्य यूरोलाजी सेन्टर एण्ड मैटरनिटी होम",
+    opdCentreAddress: "१० नं0 बोरिंग बनकटवा रोड , गोरखनाथ , गोरखपुर",
+    opdCentreMobile: "मो :- 9956390836, 8354885346",
+    opdDoc1Name: "डा0 अरविन्द तिवारी",
+    opdDoc1Quals: "M.B.B.S , M.S , M.Ch. , D.N.B",
+    opdDoc1Spec: "(यूरोलाजिस्ट सर्जन)",
+    opdDoc1Credentials:
+      "पूर्व : वरिष्ठ रेजिडेन्ट\n: के0 जी0 एम0 सी0, लखनऊ\n: एस0 एल0 जे0 हास्पिटल, नई दिल्ली\n: सी0 एम0 सी0, वैलोर\n: जिपमेर, पाण्डीचेरी",
+    opdDoc1Reg: "Reg. No. 36482 (MCI-UP)",
+    opdDoc2Name: "डा0 पूनम तिवारी",
+    opdDoc2Quals: "M.B.B.S , D.G.O. ( Lucknow )",
+    opdDoc2Spec: "(स्त्री एवं प्रसूति रोग विशेषज्ञ)",
+    opdDoc2Credentials:
+      "पूर्व : रेजिडेन्ट डाक्टर\n: के0 जी0 एम0 सी0, लखनऊ\n: परामर्श चिकित्सक\nगर्वन्मेन्ट मैटरनिटी हास्पिटल, पाण्डीचेरी",
+    opdDoc2Reg: "Reg. No. 040728 (MCI-UP)",
+    opdTimingLeft: "परामर्श समय :\nसोमवार से शनिवार –\nदोपहर 2 बजे से 7 बजे तक",
+    opdTimingCentreHindi: "कृप्या पहले से समय लेकर आयें",
+    opdTimingCentre: "Consultation By Appointment",
+    opdTimingRight:
+      "परामर्श समय :\nसोमवार से शुक्रवार –\nदोपहर 11 बजे से 5 बजे तक\nशनिवार– दोपहर 12 बजे से 3 बजे तक",
+    opdRegNo: "00000030110",
+    opdPatientId: "00000006255",
+    opdDate: "19-Aug-2026 10:54 AM",
+    opdTokenNo: "14",
+    opdWeight: "",
+    opdBp: "",
+    opdGuardian: "IMRAN AHMED",
+    opdDoctorName: "Dr. Onkar Rai (M.D.MED.)",
+    opdDiagnosis: "",
+    opdReviewLine: "........................दिन के बाद दिखाना है ।",
+    opdFooterNote: "नोट – रिपोर्ट दिखाने का समय दोपहर 3 से 5 बजे तक / एम्बुलेस सुविधा 24 घण्टे उपलब्ध",
+    opdLegalNotes:
+      "इस प्रतिष्ठान से सम्बन्धित किसी भी विवाद का निस्तासण केवल गोरखपुर न्याय क्षेत्र के अधीन होगा ।\nडाक्टर द्वारा लिखी गयी किसी भी दवा एवं सूई से कोई परेशानी होने पर दवा रोक कर हास्पिटल में सम्पर्क करे ।",
+    opdHolidayNote: "रविवार अवकास",
+    labLogoPath: "/images/logos/shri-sai-pathology.png",
+    labName: "श्री साईं पैथालोजी",
+    labAddress:
+      "आदित्य यूरोलॉजी सेन्टर एण्ड मैटरनिटी होम, 10 नं0 बोरिंग, बनकटवा रोड, गोरखनाथ, गोरखपुर",
+    labPhone: "2257219",
+    labPatientName: "ANJUM FATIMA   ( 42 Y/F )",
+    labRefByDoctor: "ARVIND TIWARI, M.S.,M.C.H.",
+    labReportDate: "19/08/26",
+    labSampleNo: "A-36/11 /Lab Sample",
+    labResults:
+      "# HAEMATOLOGY\nHaemoglobin | 13.5 | Gm% |  | 12 - 18 Gm%\nTotal Leukocyte Count | 11200 | /Cumm | H | 4000 - 11000 /Cumm\n> Diff. Leukoctyte Count\n- Neutrophils | 76 | % | H | 40 - 75 %\n- Lymphocytes | 19 | % | L | 20 - 45 %\n- Monocytes | 01 | % |  | 1 - 10 %\n- Eosinophils | 04 | % |  | 1 - 8 %\n- Basophils | 00 | % |  | 0 - 1 %\nPlatelet Count | 1.18 | lac/cumm. | L | 1.5 - 4 lac/cumm.\nBleeding Time | 1 min. 56 sec |  |  | 2 - 7 min.\nCoagulation Time | 6 min. 40 sec |  |  | 5 - 11 min.\n> Blood Group\n- ABO Group | \"B\"\n- Rh Group | \"POSITIVE\"\n# SEROLOGY\nHIV Screening Test | \"NEGATIVE\"\n* (Note-Please confirm test by Western-Blot technique.)\nAustralia Antigen (HBS-Ag) | \"NEGATIVE\"\nHCV Antibody in serum | \"NEGATIVE\"\n# BLOOD CHEMISTRY\n> Serum Glucose\n- (Random) | 81.5 | mg% |  | 60 - 160 mg%\n- Urine Sugar | NIL\nSerum Urea | 30.6 | mg% |  | 13 - 45 mg%\nS. Creatinine | 1.16 | mg% |  | 0.6 - 1.3 mg%",
+    labSignatoryName: "DR. MANGLESH K. SRIVASTAVA",
+    labSignatoryQualification: "M.D PATH",
+    labDisclaimer:
+      "This report is not valid for medico-legal purpose, In case of any discrepancy kindly do not hesitate in asking for a review.",
+    radLogoPath: "/images/logos/kt-diagnostic.png",
+    radIsoPath: "",
+    radCentreName: "KT MRI & CT Scan Center",
+    radTagline: "Our emphasis, excellence in diagnosis",
+    radTaglineHindi: "हमारी प्राथमिकता, निदान में गुणवत्ता",
+    radAddress: "Opposite Vet. Bhadur Singh Sports College\nKhajanchi Bargadwa By-Pass Road\nGorakhpur-273003\nPh. Reception :  8417000900\nPh. Manager :  8417000898\nPh. Directors :  9415212566, 9415211286\nE-mail : knspl.gkp@gmail.com",
+    radReportLabel: "REPORT",
+    radIdNo: "X/04-07-06",
+    radReportDate: "August 19, 2026",
+    radPatientName: "MRS. ANJUM FATIMA",
+    radAgeSex: "AGE/SEX 42 Y/F",
+    radRefBy: "Dr. D. P. SINGH, MS",
+    radStudyTitle: "X-RAY KUB",
+    radFindings: "Suboptimal study due to poor bowel preparation.\nA radio-opaque shadow measuring approx 13 mm noted around left transverse process of L3 vertebrae ? Proximal ureteric calculus.\nAnother Radio-opaque shadow measuring approx 15 mm noted in midline in lower pelvic region superior to pubic symphysis concerning for urethral calculus.\nLumbo-sacral spine and pelvis appear normal.\nParaspinal soft tissues are normal.\nBilateral sacroiliac and hip joints are visualized normally.",
+    radAdviceLabel: "ADV",
+    radAdvice: "CLINICAL CORRELATION & CT KUB for further evaluation.",
+    radSignatoryName: "Dr. Piyush Srivastava",
+    radSignatoryQualification: "D.M.R.D.(Radiodiagnosis)",
+    radDisclaimer: "THIS REPORT IS NOT FOR MEDICO LEGAL PURPOSE",
+    radFacilitiesHeading: "उपलब्ध सुविधाएं",
+    radFacilities: " | Siemens C.T. Scan | CT Scan मस्तिष्क, पेट, सीना आदि ; CT Angiography ; Digital X-ray\n | Philips 1.5 T MRI | MRI Scan ; 4D Colour Dopler ; CT/USG Guded Biopsy/FNAC\n | Siemens Accuson S 2000 | ECG, ECO Cardiography ; Dr. Lal Path Lab ; 24 H Ambulance\n | Siemens X-Ray | ",
+    items:
+      "5% DEXT | 300412 | IVF | DAF22185 | 28 Aug 2028 | 33.04 | 1.00 | 12.00\nD N S | 300412 | IVF | DSAF23100 | 28 Sep 2027 | 34.02 | 1.00 | 12.00\nN.S 500 | 300412 | IVF | NSF23023 | 28 Jun 2028 | 31.07 | 1.00 | 12.00\nR.L | 300412 | IVF | RLPF23054 | 28 Dec 2027 | 50.36 | 4.00 | 12.00\nSUMOL IV 100ML | 300412 | IVF | ABZ1002 | 28 Jul 2027 | 294.64 | 1.00 | 12.00\nPERINORAM 2ML | 300400 | INJECTION | GE273006 | 28 Jan 2027 | 5.96 | 1.00 | 0.00\nTROPIN | 300405 | INJECTION | KMO38072 | 28 Dec 2027 | 4.08 | 1.00 | 5.00\nLICOLET/PYROLET | 300412 | INJECTION | P22S113 | 28 Sep 2028 | 13.61 | 1.00 | 12.00\nBUTADOL 2ML | 300412 | INJECTION | KP095025 | 28 May 2027 | 72.14 | 1.00 | 12.00\nMYE PYROLATE 5ML | 300412 | INJECTION | P24161 | 28 Jan 2027 | 77.14 | 2.00 | 12.00\nMEZOLAM VAIL | 300412 | INJECTION | M90511 | 28 Oct 2028 | 29.46 | 1.00 | 12.00\nTRAMAZAC | 300412 | INJECTION | HG125 | 28 Feb 2028 | 21.02 | 1.00 | 12.00\nDYNAPAR | 300400 | INJECTION | D122S122 | 28 Sep 2027 | 33.46 | 1.00 | 0.00\nLASIX 2ML | 300400 | INJECTION | 2123062 | 28 Jun 2027 | 11.96 | 1.00 | 0.00\nTRENEXA/TEXAKIND | 300400 | INJECTION | TNA2242 | 28 Feb 2028 | 64.20 | 2.00 | 0.00\nDEXONA 2ML | 300400 | INJECTION | WAO2132 | 28 May 2028 | 11.57 | 1.00 | 0.00\nEMESET 4ML | 300412 | INJECTION | JHH155 | 28 Jul 2028 | 25.95 | 1.00 | 12.00\nIV SET | 300412 | IVF | G130120906 | 28 Mar 2028 | 290.18 | 1.00 | 12.00\nUROBAG | 300405 | SURGICAL | G230450527 | 28 Jul 2027 | 300.95 | 2.00 | 5.00\nB P BLADE | 300412 | SURGICAL | FTVYTFR7T | 28 Aug 2027 | 4.46 | 1.00 | 12.00\nCRANIOTOMY DROP | 300412 | SURGICAL | 2210DD0 | 28 Jun 2028 | 802.00 | 1.00 | 0.00\nABGEL | 300400 | SURGICAL | 111622 | 28 Aug 2027 | 92.86 | 1.00 | 12.00\nNYLUS 2-0 CUT | 300412 | SUTURE | LB2306 | 28 Sep 2027 | 166.07 | 1.00 | 12.00\nLOX2% ADRELINE | 300412 | INJECTION | SU1478187 | 28 Feb 2028 | 30.04 | 1.00 | 12.00\nANIWIN 0.5% VAIL | 300412 | INJECTION | B12573 | 28 Apr 2027 | 83.56 | 1.00 | 12.00\nD J STENT | 300412 | SURGICAL | 2023240176 | 28 Dec 2028 | 705.36 | 1.00 | 12.00\nCALIGNO JELLY | 300412 | GEL | XT-257 | 28 Sep 2028 | 30.27 | 1.00 | 12.00\nE.C.G ELECOTRADE | 300412 | SURGICAL | ETSN278 | 28 Dec 2028 | 24.11 | 3.00 | 12.00\nD-WATER 5ML | 300412 | LIQUID | 2225287 | 28 Nov 2028 | 2.57 | 6.00 | 12.00\nENDOCATRACHE TUBE | 300412 | SURGICAL | B202331 | 28 May 2028 | 291.07 | 4.00 | 12.00\nSUCTION CATH 14,16 NO | 300412 | SURGICAL | G221011049 | 28 Oct 2027 | 71.43 | 1.00 | 12.00\nGLOVES ROMSONS | 300412 | SURGICAL | 1322036 | 28 Dec 2028 | 62.50 | 6.00 | 12.00\nDISPO 10ML | 300412 | SYRING | 22K19K60 | 28 Dec 2028 | 22.32 | 3.00 | 12.00\nDISPO 5ML | 300412 | SYRING | G221120729 | 28 Jun 2027 | 8.35 | 3.00 | 12.00\nDISPO 3ML | 300412 | SYRING | G230220618 | 28 Jun 2027 | 7.14 | 3.00 | 12.00\nDISPO 20ML | 300412 | SYRING | G221020753 | 28 Jan 2028 | 22.32 | 1.00 | 12.00\nN.S 3LTR | 300412 | IVF | SIL30727 | 28 Mar 2028 | 531.25 | 4.00 | 12.00\nFOLICY16,18,14,20,12 | 300412 | SURGICAL | 817A1010 | 28 Nov 2027 | 297.32 | 3.00 | 12.00\nFORTWIN | 300412 | INJECTION | TAZ23011 | 28 Aug 2028 | 35.65 | 1.00 | 12.00\nFENTANYL | 300412 | INJECTION | T140512T | 28 Jan 2027 | 45.23 | 1.00 | 12.00\nNEOROF 1 | 300412 | INJECTION | T236897 | 28 Nov 2027 | 160.09 | 1.00 | 12.00\nNEOVAC 4MG | 300405 | INJECTION | KLKL4545 | 28 Aug 2027 | 86.19 | 1.00 | 5.00\nSENSICLAV 1.2 G | 300400 | INJECTION | G36243 | 28 Nov 2027 | 157.00 | 2.00 | 0.00\nTETVAC | 300405 | INJECTION | A0153822 | 28 Jun 2027 | 12.04 | 1.00 | 5.00\nNOZIA | 300400 | INJECTION | CJY1028 | 28 Mar 2027 | 60.60 | 1.00 | 0.00\nTRENEXA/TEXAKIND | 300400 | INJECTION | TNA2245 | 28 Nov 2028 | 64.20 | 2.00 | 0.00\nR.L | 300412 | IVF | RLPF23054 | 28 Feb 2027 | 50.36 | 1.00 | 12.00\nVIGGO | 300412 | SURGICAL | G22110752 | 28 Feb 2027 | 223.21 | 1.00 | 12.00\nEASYFIX | 300412 | SURGICAL | IVME06-042 | 28 Oct 2027 | 53.57 | 1.00 | 12.00\nDISPO 20ML | 300412 | SYRING | G23511094 | 28 May 2028 | 23.21 | 2.00 | 12.00\nENEMA | 300412 | LIQUID | SPE-57 | 28 Sep 2027 | 42.86 | 1.00 | 12.00\nSAFTYREZAR BLADE | 300400 | CONSUMABLE | G230110021 | 28 Feb 2027 | 36.50 | 1.00 | 0.00\nDISPO 3ML | 300412 | SYRING | G230220618 | 28 May 2028 | 7.14 | 4.00 | 12.00\nIV SET | 300412 | IVF | G230420824 | 28 Mar 2028 | 290.18 | 1.00 | 12.00\nCRANIOTOMY DROP | 300400 | SURGICAL | 2305AB0 | 28 Apr 2028 | 802.00 | 1.00 | 0.00\nGUIDE WIRE | 300400 | SURGICAL | 221011V | 28 Jun 2028 | 2226.00 | 1.00 | 0.00\nSPINAL NEEDIL | 300412 | SURGICAL | 2204016 | 28 May 2028 | 191.96 | 1.00 | 12.00\nTAZOMAC 4.5g | 300412 | INJECTION | LTC2305A | 28 Jan 2028 | 235.90 | 1.00 | 12.00\nN.S 100 | 300412 | IVF | NSF23056 | 28 Mar 2028 | 17.50 | 1.00 | 12.00\nDISPO 20ML | 300412 | SYRING | 320202NJH1 | 28 Jan 2028 | 22.32 | 1.00 | 12.00\nABGEL | 300412 | SURGICAL | 1116222 | 28 Jun 2027 | 92.86 | 1.00 | 12.00\nE.C.G ELECOTRADE | 300412 | SURGICAL | ETSN278-12 | 28 Jun 2028 | 24.11 | 1.00 | 12.00"
   },
   "resume": {
     fullName: "Anderson Varghese",

@@ -122,9 +122,13 @@
 }
 
 @media print {
+  /* A real margin, not 0. Printers cannot image to the sheet edge, so with
+     margin:0 the browser has to squeeze a full-height page into a smaller
+     imageable area - and because .doc-page forbids an internal break, Safari
+     clips the overflow instead of breaking, eating the top of the sheet. */
   @page {
     size: A4;
-    margin: 0;
+    margin: 8mm;
   }
 
   html, body {
@@ -153,8 +157,8 @@
   }
 
   #print-root {
-    width: 210mm !important;
-    max-width: 210mm !important;
+    width: 100% !important;
+    max-width: none !important;
     margin: 0 !important;
     box-shadow: none !important;
     border-radius: 0 !important;
@@ -163,5 +167,64 @@
 
   .no-print {
     display: none !important;
+  }
+
+  /* Strip the screen layout so the sheets start at the top-left of the paper:
+     without this the rail offset and column padding push content over the
+     page edge and every sheet spills onto an extra printed page. */
+  main {
+    margin-left: 0 !important;
+    display: block !important;
+    min-height: 0 !important;
+  }
+
+  .preview-stage {
+    padding: 0 !important;
+  }
+
+  .paper-sheet {
+    max-width: none !important;
+    width: 100% !important;
+    overflow: visible !important;
+    border-radius: 0 !important;
+  }
+
+  /* Multi-page sheets. The 297mm min-height is a screen device only: keeping it
+     while printing overflows the printable area by a fraction and emits a blank
+     page between every sheet (very visible in Safari). Height goes auto and the
+     break is forced explicitly - page-break-after for Safari, break-after for
+     everything modern. */
+  .doc-page {
+    /* Sized against the WORST case, not the ideal one. Safari subtracts the
+       printer's own unprintable area on top of the @page margin, so a sheet
+       tuned to the theoretical content box overflows by a few mm - the footer
+       lands on a page of its own and every sheet costs two pages. 265mm plus
+       the 8mm page margins uses 281mm of 297mm, which still fits even if the
+       driver forces 12.7mm margins. Vertical padding is dropped here because
+       @page now supplies the margin. */
+    min-height: 265mm !important;
+    height: auto !important;
+    padding: 2mm 3mm !important;
+    page-break-after: always;
+    break-after: page;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .doc-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+}
+
+/* Multi-page documents: show where one A4 sheet ends and the next begins on
+   screen. The break itself is handled by breakAfter in the template. */
+.doc-page + .doc-page {
+  border-top: 1px dashed #c3c6d4;
+}
+
+@media print {
+  .doc-page + .doc-page {
+    border-top: 0 !important;
   }
 }

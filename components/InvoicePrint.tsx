@@ -15,7 +15,7 @@ export default function InvoicePrint({ children }: InvoicePrintProps) {
     pageStyle: `
     @page {
       size: A4;
-      margin: 0;
+      margin: 8mm;
     }
 
     @media print {
@@ -28,9 +28,9 @@ export default function InvoicePrint({ children }: InvoicePrintProps) {
       }
 
       #print-root {
-        width: 190mm;
-        max-width: 190mm;
-        margin: 0 auto;
+        width: 100%;
+        max-width: none;
+        margin: 0;
         box-sizing: border-box;
       }
 

@@ -34,12 +34,18 @@ import PrescriptionTemplate2 from "../templates/prescription/Template2";
 import ResumeTemplate1 from "../templates/resume/Template1";
 import MedicalCertificateTemplate1 from "../templates/medical-certificate/Template1";
 import MedicalCertificateTemplate2 from "../templates/medical-certificate/Template2";
+import MedicalCertificateTemplate3 from "../templates/medical-certificate/Template3";
+import MedicalSlipTemplate1 from "../templates/medical-slip/Template1";
+import MedicalSlipTemplate2 from "../templates/medical-slip/Template2";
+import MedicalSlipTemplate3 from "../templates/medical-slip/Template3";
+import MedicalSlipTemplate4 from "../templates/medical-slip/Template4";
+import MedicalSlipTemplate5 from "../templates/medical-slip/Template5";
 
 type EditableDocumentValues = Record<string, string | number>;
 /* Bump this whenever the defaults in mockData change: stored form data is merged
    OVER the defaults, so an existing browser keeps showing its old saved values
    until the key changes. v21 = updated medical certificate diagnosis. */
-const FORM_DATA_STORAGE_KEY = "document-printer.formData.v21";
+const FORM_DATA_STORAGE_KEY = "document-printer.formData.v37";
 const TEMPLATE_STORAGE_KEY = "document-printer.templateSelection.v1";
 const ACTIVE_DOCUMENT_STORAGE_KEY = "document-printer.activeDocument.v1";
 
@@ -48,20 +54,17 @@ function isObjectRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function mergeFormDataWithDefaults(rawValue: unknown): DocumentDataMap {
-  const merged: DocumentDataMap = {
-    "salary-slip": { ...mockData["salary-slip"] },
-    "offer-letter": { ...mockData["offer-letter"] },
-    "relieving-letter": { ...mockData["relieving-letter"] },
-    "bank-statement": { ...mockData["bank-statement"] },
-    "roles-responsibility": { ...mockData["roles-responsibility"] },
-    "microsoft-sales-chat": { ...mockData["microsoft-sales-chat"] },
-    "bill": { ...mockData["bill"] },
-    "contract": { ...mockData["contract"] },
-    "ultrasound-report": { ...mockData["ultrasound-report"] },
-    "prescription": { ...mockData["prescription"] },
-    "medical-certificate": { ...mockData["medical-certificate"] },
-    "resume": { ...mockData["resume"] }
-  };
+  /* Derived from mockData rather than a hand-written list: adding a document
+     type used to mean remembering to add it here too, and forgetting crashed
+     the form with "values[field.key] of undefined". */
+  const merged = {} as DocumentDataMap;
+  const target = merged as Record<DocumentType, Record<string, string | number>>;
+
+  (Object.keys(mockData) as DocumentType[]).forEach((documentType) => {
+    target[documentType] = {
+      ...(mockData[documentType] as Record<string, string | number>)
+    };
+  });
 
   if (!isObjectRecord(rawValue)) {
     return merged;
@@ -239,10 +242,29 @@ export default function HomePage() {
     }
 
     if (selectedDocument === "medical-certificate") {
+      if (activeTemplate === "template3") {
+        return <MedicalCertificateTemplate3 data={formDataByDocument["medical-certificate"]} />;
+      }
       if (activeTemplate === "template2") {
         return <MedicalCertificateTemplate2 data={formDataByDocument["medical-certificate"]} />;
       }
       return <MedicalCertificateTemplate1 data={formDataByDocument["medical-certificate"]} />;
+    }
+
+    if (selectedDocument === "medical-slip") {
+      if (activeTemplate === "template5") {
+        return <MedicalSlipTemplate5 data={formDataByDocument["medical-slip"]} />;
+      }
+      if (activeTemplate === "template4") {
+        return <MedicalSlipTemplate4 data={formDataByDocument["medical-slip"]} />;
+      }
+      if (activeTemplate === "template3") {
+        return <MedicalSlipTemplate3 data={formDataByDocument["medical-slip"]} />;
+      }
+      if (activeTemplate === "template2") {
+        return <MedicalSlipTemplate2 data={formDataByDocument["medical-slip"]} />;
+      }
+      return <MedicalSlipTemplate1 data={formDataByDocument["medical-slip"]} />;
     }
 
     if (selectedDocument === "resume") {

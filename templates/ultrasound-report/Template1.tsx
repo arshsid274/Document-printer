@@ -197,7 +197,7 @@ export default function Template1({ data }: UltrasoundReportTemplateProps) {
   });
 
   return (
-    <div style={pageStyle}>
+    <div className="usg-sheet" style={pageStyle}>
       {/* ══════════════ Letterhead ══════════════ */}
       <div style={{ position: "relative", height: `${HEADER_H}px` }}>
         <Letterhead data={data} />
@@ -281,13 +281,13 @@ export default function Template1({ data }: UltrasoundReportTemplateProps) {
           style={{
             marginTop: "56.4px", // first baseline lands on 321
             fontSize: sz(16),
-            lineHeight: sz(18.1),
+            lineHeight: sz(17.2),
             textAlign: "justify",
             whiteSpace: "pre-wrap",
           }}
         >
           {findings.map((finding, index) => (
-            <p key={index} style={{ margin: `0 0 ${sz(11.6)}` }}>
+            <p key={index} style={{ margin: `0 0 ${sz(7)}` }}>
               {finding}
             </p>
           ))}
@@ -295,7 +295,7 @@ export default function Template1({ data }: UltrasoundReportTemplateProps) {
 
         <h3
           style={{
-            margin: `${sz(19.9)} 0 0`,
+            margin: `${sz(12)} 0 0`,
             fontSize: sz(17.3),
             lineHeight: 1,
             fontFamily: MS_SANS,
@@ -309,7 +309,7 @@ export default function Template1({ data }: UltrasoundReportTemplateProps) {
 
         <ul
           style={{
-            margin: `${sz(15.2)} 0 0`,
+            margin: `${sz(9)} 0 0`,
             paddingLeft: sz(60),
             listStyleType: "disc",
             fontFamily: MS_SANS,
@@ -327,7 +327,7 @@ export default function Template1({ data }: UltrasoundReportTemplateProps) {
             image, so the name and qualification are the scan's own, not live text.
             SIG_BLOCK_W sizes it; at 97px the typed name reads ~84px wide, matching
             the report's type. */}
-        <div style={{ marginTop: sz(15), marginLeft: `${SIG_INDENT - 1.3}px` }}>
+        <div style={{ marginTop: sz(9), marginLeft: `${SIG_INDENT - 1.3}px` }}>
           <img
             src="/images/logos/dr-signature-block.png"
             alt={`${data.signatoryName} — ${data.signatoryQualification}`}

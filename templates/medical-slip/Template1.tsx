@@ -131,7 +131,6 @@ const SUMMARY_ROW_EQUIVALENT = 14;
 export default function Template1({ data }: MedicalSlipTemplateProps) {
   const text = (key: keyof MedicalSlipData) => `${data[key] ?? ""}`.trim();
 
-  const rows = parseRows(`${data.items ?? ""}`);
   const logoPath = text("logoPath");
   const isInterState = text("supplyType").toLowerCase().startsWith("inter");
 
@@ -139,31 +138,69 @@ export default function Template1({ data }: MedicalSlipTemplateProps) {
   const firstPageRows = Math.max(1, Number(data.rowsFirstPage) || 36);
   const laterPageRows = Math.max(1, Number(data.rowsPerPage) || 42);
 
-  const pages: SlipRow[][] = [rows.slice(0, firstPageRows)];
-  for (let index = firstPageRows; index < rows.length; index += laterPageRows) {
-    pages.push(rows.slice(index, index + laterPageRows));
-  }
+  /* Paginate one bill's rows and compute its own GST slabs and totals. Several
+     bills can be printed back to back (e.g. supplies drawn on different dates),
+     each with its own header, item list, summary and PAID stamp. */
+  const buildBill = (itemsRaw: string, billNo: string, billDate: string, printDate: string) => {
+    const rows = parseRows(itemsRaw);
 
-  const lastCapacity = pages.length === 1 ? firstPageRows : laterPageRows;
-  const summaryNeedsOwnPage =
-    pages[pages.length - 1].length + SUMMARY_ROW_EQUIVALENT > lastCapacity;
-  const totalPages = pages.length + (summaryNeedsOwnPage ? 1 : 0);
+    const pages: SlipRow[][] = [rows.slice(0, firstPageRows)];
+    for (let index = firstPageRows; index < rows.length; index += laterPageRows) {
+      pages.push(rows.slice(index, index + laterPageRows));
+    }
 
-  /* One line per distinct GST slab, computed across every page. */
-  const slabs = Array.from(new Set(rows.map((row) => row.gst)))
-    .sort((a, b) => a - b)
-    .map((gst) => {
-      const sale = round2(
-        rows.filter((row) => row.gst === gst).reduce((sum, row) => sum + row.amount, 0)
-      );
-      const taxable = round2(sale / (1 + gst / 100));
-      return { gst, sale, taxable, tax: round2(sale - taxable) };
-    });
+    const lastCapacity = pages.length === 1 ? firstPageRows : laterPageRows;
+    const summaryNeedsOwnPage =
+      pages[pages.length - 1].length + SUMMARY_ROW_EQUIVALENT > lastCapacity;
 
-  const netAmount = round2(slabs.reduce((sum, slab) => sum + slab.taxable, 0));
-  const totalGst = round2(slabs.reduce((sum, slab) => sum + slab.tax, 0));
-  const netPayable = Math.round(netAmount + totalGst);
-  const roundOff = round2(netPayable - (netAmount + totalGst));
+    const slabs = Array.from(new Set(rows.map((row) => row.gst)))
+      .sort((a, b) => a - b)
+      .map((gst) => {
+        const sale = round2(
+          rows.filter((row) => row.gst === gst).reduce((sum, row) => sum + row.amount, 0)
+        );
+        const taxable = round2(sale / (1 + gst / 100));
+        return { gst, sale, taxable, tax: round2(sale - taxable) };
+      });
+
+    const netAmount = round2(slabs.reduce((sum, slab) => sum + slab.taxable, 0));
+    const totalGst = round2(slabs.reduce((sum, slab) => sum + slab.tax, 0));
+    const netPayable = Math.round(netAmount + totalGst);
+    const roundOff = round2(netPayable - (netAmount + totalGst));
+    const pageCount = pages.length + (summaryNeedsOwnPage ? 1 : 0);
+
+    return {
+      pages,
+      summaryNeedsOwnPage,
+      slabs,
+      netAmount,
+      totalGst,
+      netPayable,
+      roundOff,
+      pageCount,
+      billNo,
+      billDate,
+      printDate
+    };
+  };
+
+  type Bill = ReturnType<typeof buildBill>;
+
+  /* One or more itemised bills printed back to back and continuously numbered,
+     so a supplies bill drawn on a later date follows on as the next page rather
+     than being a separate document. The first bill always prints; each later
+     one (items2, items3, ...) prints only when it has items. */
+  const billSources = [
+    { items: `${data.items ?? ""}`, billNo: text("billNo"), billDate: text("billDate"), printDate: text("printDate") },
+    { items: `${data.items2 ?? ""}`, billNo: text("billNo2"), billDate: text("billDate2"), printDate: text("printDate2") },
+    { items: `${data.items3 ?? ""}`, billNo: text("billNo3"), billDate: text("billDate3"), printDate: text("printDate3") }
+  ];
+
+  const bills: Bill[] = billSources
+    .filter((source, index) => index === 0 || source.items.trim())
+    .map((source) => buildBill(source.items, source.billNo, source.billDate, source.printDate));
+
+  const grandTotalPages = bills.reduce((sum, bill) => sum + bill.pageCount, 0);
 
   const pageStyle: React.CSSProperties = {
     width: "100%",
@@ -228,7 +265,7 @@ export default function Template1({ data }: MedicalSlipTemplateProps) {
         <img
           src={logoPath}
           alt={text("centreName") || "Centre"}
-          style={{ width: "58px", height: "58px", objectFit: "contain", flexShrink: 0 }}
+          style={{ width: "130px", height: "auto", objectFit: "contain", flexShrink: 0 }}
         />
       ) : null}
       <div style={{ flex: 1, minWidth: 0, textAlign: "center" }}>
@@ -245,7 +282,7 @@ export default function Template1({ data }: MedicalSlipTemplateProps) {
     </div>
   );
 
-  const billHeader = (
+  const billHeader = (bill: Bill) => (
     <>
       <div
         style={{
@@ -290,17 +327,17 @@ export default function Template1({ data }: MedicalSlipTemplateProps) {
       >
         <div>
           {field("UHID No", text("uhidNo"))}
-          {field("Bill No", text("billNo"))}
+          {field("Bill No", bill.billNo)}
           {field("Patient Name", text("patientName"))}
           {field("Consultant", text("consultant"))}
         </div>
         <div>
-          {field("Bill Date", text("billDate"), "68px")}
+          {field("Bill Date", bill.billDate, "68px")}
           {field("IP No", text("ipNo"), "68px")}
           {field("Location", text("location"), "68px")}
         </div>
         <div>
-          {field("Print Date", text("printDate"), "80px")}
+          {field("Print Date", bill.printDate, "80px")}
           {field("Payment Mode", text("paymentMode"), "80px")}
         </div>
       </div>
@@ -353,7 +390,7 @@ export default function Template1({ data }: MedicalSlipTemplateProps) {
     </table>
   );
 
-  const summaryBlock = (
+  const summaryBlock = (bill: Bill) => (
     <>
       <div style={{ display: "flex", alignItems: "flex-start", gap: "14px", marginTop: "14px" }}>
         <table style={{ borderCollapse: "collapse", tableLayout: "fixed", flex: 1 }}>
@@ -378,7 +415,7 @@ export default function Template1({ data }: MedicalSlipTemplateProps) {
             </tr>
           </thead>
           <tbody>
-            {slabs.map((slab) => (
+            {bill.slabs.map((slab) => (
               <tr key={slab.gst}>
                 <td style={mid}>{money(slab.gst).replace(/\.00$/, "")}</td>
                 <td style={num}>{money(slab.sale)}</td>
@@ -393,15 +430,15 @@ export default function Template1({ data }: MedicalSlipTemplateProps) {
         </table>
 
         <div style={{ width: "232px", flexShrink: 0 }}>
-          {totalLine("Net Amount", money(netAmount))}
-          {totalLine("Total  GST", money(totalGst))}
-          {totalLine("Round Off", money(roundOff))}
-          {totalLine("Net Payable", money(netPayable), true)}
+          {totalLine("Net Amount", money(bill.netAmount))}
+          {totalLine("Total  GST", money(bill.totalGst))}
+          {totalLine("Round Off", money(bill.roundOff))}
+          {totalLine("Net Payable", money(bill.netPayable), true)}
         </div>
       </div>
 
       <p style={{ margin: "12px 0 0", fontSize: "9.5px" }}>
-        <b>Rupees (In Words)</b> : {amountInWords(netPayable)}
+        <b>Rupees (In Words)</b> : {amountInWords(bill.netPayable)}
       </p>
 
       <div
@@ -416,8 +453,24 @@ export default function Template1({ data }: MedicalSlipTemplateProps) {
         <p style={{ margin: 0, fontSize: "9.5px" }}>
           <b>Created By</b> :-&nbsp; {text("createdBy")}
         </p>
-        {/* Label only - signature and PAID stamp go on the printed sheet */}
-        <p style={{ margin: 0, fontSize: "9.5px" }}>Authorized Signatory</p>
+        {/* Authorized Signatory label with the PAID stamp printed beneath it. */}
+        <div style={{ textAlign: "right" }}>
+          <p style={{ margin: 0, fontSize: "9.5px" }}>Authorized Signatory</p>
+          {text("paidStampPath") ? (
+            <img
+              src={text("paidStampPath")}
+              alt="Paid"
+              style={{
+                width: "130px",
+                height: "auto",
+                objectFit: "contain",
+                display: "block",
+                marginLeft: "auto",
+                marginTop: "6px"
+              }}
+            />
+          ) : null}
+        </div>
       </div>
     </>
   );
@@ -426,7 +479,7 @@ export default function Template1({ data }: MedicalSlipTemplateProps) {
     const format = text("pageLabel") || "Page {n} of {m}";
     return (
       <p style={{ margin: "10px 0 0", fontSize: "8.5px", textAlign: "right" }}>
-        {format.replace("{n}", `${pageNumber}`).replace("{m}", `${totalPages}`)}
+        {format.replace("{n}", `${pageNumber}`).replace("{m}", `${grandTotalPages}`)}
       </p>
     );
   };
@@ -445,26 +498,40 @@ export default function Template1({ data }: MedicalSlipTemplateProps) {
     </div>
   );
 
-  return (
-    <>
-      {pages.map((pageRows, index) =>
-        sheet(`page-${index}`, index + 1, (
+  /* Flatten every bill's pages into one continuously numbered sequence, so a
+     second bill picks up where the first ends (e.g. page 4 of 4). */
+  const sheets: React.ReactNode[] = [];
+  let pageNumber = 0;
+
+  bills.forEach((bill, billIndex) => {
+    bill.pages.forEach((pageRows, index) => {
+      pageNumber += 1;
+      sheets.push(
+        sheet(`b${billIndex}-p${index}`, pageNumber, (
           <>
             {letterhead}
-            {index === 0 ? billHeader : null}
+            {index === 0 ? billHeader(bill) : null}
             {itemTable(pageRows)}
-            {!summaryNeedsOwnPage && index === pages.length - 1 ? summaryBlock : null}
+            {!bill.summaryNeedsOwnPage && index === bill.pages.length - 1
+              ? summaryBlock(bill)
+              : null}
           </>
         ))
-      )}
-      {summaryNeedsOwnPage
-        ? sheet("page-summary", totalPages, (
-            <>
-              {letterhead}
-              {summaryBlock}
-            </>
-          ))
-        : null}
-    </>
-  );
+      );
+    });
+
+    if (bill.summaryNeedsOwnPage) {
+      pageNumber += 1;
+      sheets.push(
+        sheet(`b${billIndex}-summary`, pageNumber, (
+          <>
+            {letterhead}
+            {summaryBlock(bill)}
+          </>
+        ))
+      );
+    }
+  });
+
+  return <>{sheets}</>;
 }

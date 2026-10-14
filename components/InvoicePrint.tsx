@@ -39,6 +39,38 @@ export default function InvoicePrint({ children }: InvoicePrintProps) {
         break-inside: avoid-page;
       }
 
+      /* react-to-print prints a cloned copy in its own iframe and does NOT
+         reliably carry the globals.css @media print rules, so the sheet-height
+         caps that keep a document on the right number of pages must be repeated
+         here. Without them the templates' inline 297mm min-height overflows the
+         printable area and spills a mostly-blank extra page (very visible in
+         Safari). Values mirror app/globals.css. */
+      .usg-sheet {
+        min-height: 250mm !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .doc-page {
+        height: auto !important;
+        padding: 2mm 3mm !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .doc-page:only-child {
+        min-height: 265mm !important;
+      }
+
+      .doc-page:not(:only-child) {
+        min-height: 245mm !important;
+      }
+
+      .doc-page + .doc-page {
+        page-break-before: always;
+        break-before: page;
+      }
+
       .no-print {
         display: none !important;
       }

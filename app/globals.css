@@ -172,10 +172,24 @@
   /* Strip the screen layout so the sheets start at the top-left of the paper:
      without this the rail offset and column padding push content over the
      page edge and every sheet spills onto an extra printed page. */
+  /* Every ancestor of the sheet must drop its screen height in print, or a
+     leftover min-height (body keeps min-h-screen = 100vh) leaves WebKit with an
+     over-tall root box and it prints a trailing blank page. */
+  html, body {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
   main {
     margin-left: 0 !important;
     display: block !important;
     min-height: 0 !important;
+    height: auto !important;
+  }
+
+  #print-root {
+    min-height: 0 !important;
+    height: auto !important;
   }
 
   .preview-stage {
@@ -189,36 +203,49 @@
     border-radius: 0 !important;
   }
 
-  /* Multi-page sheets. The 297mm min-height is a screen device only: keeping it
-     while printing overflows the printable area by a fraction and emits a blank
-     page between every sheet (very visible in Safari). Height goes auto and the
-     break is forced explicitly - page-break-after for Safari, break-after for
-     everything modern. */
+  /* Multi-page sheets. The 297mm min-height is a screen device only. */
   .doc-page {
-    /* Sized against the WORST case, not the ideal one. Safari subtracts the
-       printer's own unprintable area on top of the @page margin, so a sheet
-       tuned to the theoretical content box overflows by a few mm - the footer
-       lands on a page of its own and every sheet costs two pages. 265mm plus
-       the 8mm page margins uses 281mm of 297mm, which still fits even if the
-       driver forces 12.7mm margins. Vertical padding is dropped here because
-       @page now supplies the margin. */
-    min-height: 265mm !important;
     height: auto !important;
     padding: 2mm 3mm !important;
-    page-break-after: always;
-    break-after: page;
     page-break-inside: avoid;
     break-inside: avoid;
   }
 
-  .doc-page:last-child {
-    page-break-after: auto;
-    break-after: auto;
+  /* A single-sheet document has no page break anywhere, so it is safe to fill
+     the page - that is what puts its footer at the foot. */
+  .doc-page:only-child {
+    min-height: 265mm !important;
+  }
+
+  /* Multi-sheet documents are the opposite case. If a sheet fills the page, the
+     engine is already sitting at a page boundary when the forced break fires,
+     and WebKit emits a SECOND, empty page - every sheet then costs two pages.
+     Keeping these sheets clearly short of a full page makes each break
+     unambiguous. The cost is a wider bottom margin on multi-page documents,
+     which is the right trade against printing blank pages. */
+  .doc-page:not(:only-child) {
+    min-height: 245mm !important;
+  }
+
+  /* The ultrasound report is a pixel-perfect, absolutely-positioned A4 layout
+     that manages its own internal margins, so it must NOT take the .doc-page
+     padding override. Its inline 297mm min-height overflowed the printable area
+     and spilled the footer bar onto a second page; capping it below the box
+     keeps the whole sheet - footer included - on one page. */
+  .usg-sheet {
+    min-height: 250mm !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .doc-page + .doc-page {
+    page-break-before: always;
+    break-before: page;
   }
 }
 
 /* Multi-page documents: show where one A4 sheet ends and the next begins on
-   screen. The break itself is handled by breakAfter in the template. */
+   screen. The page break itself is handled in the print block above. */
 .doc-page + .doc-page {
   border-top: 1px dashed #c3c6d4;
 }

@@ -128,7 +128,7 @@ export default function Template3({ data }: MedicalSlipTemplateProps) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 108px 1fr",
+          gridTemplateColumns: "1fr 132px 1fr",
           alignItems: "flex-start",
           columnGap: "8px",
           marginTop: "4px"
@@ -147,7 +147,7 @@ export default function Template3({ data }: MedicalSlipTemplateProps) {
             <img
               src={logoPath}
               alt={text("opdCentreName") || "Centre"}
-              style={{ width: "92px", height: "92px", objectFit: "contain" }}
+              style={{ width: "128px", height: "auto", objectFit: "contain" }}
             />
           ) : null}
         </div>

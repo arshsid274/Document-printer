@@ -9,7 +9,11 @@ import { MedicalSlipData } from "../../data/mockData";
  *
  *   # SECTION HEADING            -> centred heading with a "Ref. Value" caption
  *   > Sub heading                -> label row with no value (e.g. "Blood Group")
+ *   ^ SUB-SECTION                -> small centred bold heading (e.g. "PHYSICAL")
  *   * Note text                  -> italic note spanning the width
+ *   ===                          -> page break; the letterhead, patient header,
+ *                                   signatory and disclaimer repeat on each page
+ *   ~ NAME | VALUE | NAME | VALUE -> two-column row (urine examination layout)
  *   NAME | VALUE | UNIT | FLAG | REF VALUE
  *   - NAME | ...                 -> same, indented under a sub heading
  *
@@ -25,7 +29,16 @@ const FOOTER_BLUE = "#24417e";
 type Row =
   | { kind: "section"; title: string }
   | { kind: "sub"; title: string }
+  | { kind: "subsection"; title: string }
   | { kind: "note"; title: string }
+  | { kind: "pagebreak" }
+  | {
+      kind: "pair";
+      leftName: string;
+      leftValue: string;
+      rightName: string;
+      rightValue: string;
+    }
   | {
       kind: "result";
       indent: boolean;
@@ -42,14 +55,33 @@ export function parseResults(raw: string): Row[] {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line): Row => {
+      if (line.startsWith("===")) {
+        return { kind: "pagebreak" };
+      }
       if (line.startsWith("#")) {
         return { kind: "section", title: line.replace(/^#+\s*/, "") };
       }
       if (line.startsWith(">")) {
         return { kind: "sub", title: line.replace(/^>\s*/, "") };
       }
+      if (line.startsWith("^")) {
+        return { kind: "subsection", title: line.replace(/^\^\s*/, "") };
+      }
       if (line.startsWith("*")) {
         return { kind: "note", title: line.replace(/^\*\s*/, "") };
+      }
+      if (line.startsWith("~")) {
+        const cell = line
+          .replace(/^~\s*/, "")
+          .split("|")
+          .map((part) => part.trim());
+        return {
+          kind: "pair",
+          leftName: cell[0] ?? "",
+          leftValue: cell[1] ?? "",
+          rightName: cell[2] ?? "",
+          rightValue: cell[3] ?? ""
+        };
       }
 
       const indent = line.startsWith("-");
@@ -68,14 +100,33 @@ export function parseResults(raw: string): Row[] {
     });
 }
 
+/* Page-break rows never reach the renderer - splitPages consumes them. */
+type PageRow = Exclude<Row, { kind: "pagebreak" }>;
+
+export function splitPages(rows: Row[]): PageRow[][] {
+  const pages: PageRow[][] = [[]];
+  rows.forEach((row) => {
+    if (row.kind === "pagebreak") {
+      if (pages[pages.length - 1].length > 0) {
+        pages.push([]);
+      }
+    } else {
+      pages[pages.length - 1].push(row);
+    }
+  });
+  if (pages.length > 1 && pages[pages.length - 1].length === 0) {
+    pages.pop();
+  }
+  return pages;
+}
+
 interface MedicalSlipTemplateProps {
   data: MedicalSlipData;
 }
 
-export default function Template4({ data }: MedicalSlipTemplateProps) {
+function ReportPage({ data, rows }: { data: MedicalSlipData; rows: PageRow[] }) {
   const text = (key: keyof MedicalSlipData) => `${data[key] ?? ""}`.trim();
 
-  const rows = parseResults(`${data.labResults ?? ""}`);
   const logoPath = text("labLogoPath");
 
   const pageStyle: React.CSSProperties = {
@@ -224,6 +275,33 @@ export default function Template4({ data }: MedicalSlipTemplateProps) {
               );
             }
 
+            if (row.kind === "subsection") {
+              return (
+                <tr key={index}>
+                  <td
+                    colSpan={5}
+                    style={{
+                      ...cell,
+                      paddingTop: "8px",
+                      paddingBottom: "2px",
+                      textAlign: "center"
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        letterSpacing: "1px",
+                        color: "#4a4a4a"
+                      }}
+                    >
+                      {row.title}
+                    </span>
+                  </td>
+                </tr>
+              );
+            }
+
             if (row.kind === "note") {
               return (
                 <tr key={index}>
@@ -239,6 +317,27 @@ export default function Template4({ data }: MedicalSlipTemplateProps) {
                     }}
                   >
                     {row.title}
+                  </td>
+                </tr>
+              );
+            }
+
+            if (row.kind === "pair") {
+              return (
+                <tr key={index}>
+                  <td colSpan={5} style={cell}>
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "28% 24% 28% 20%",
+                        columnGap: "4px"
+                      }}
+                    >
+                      <span style={{ paddingLeft: "12px" }}>{row.leftName}</span>
+                      <span style={{ fontWeight: "bold" }}>{row.leftValue}</span>
+                      <span>{row.rightName}</span>
+                      <span style={{ fontWeight: "bold" }}>{row.rightValue}</span>
+                    </div>
                   </td>
                 </tr>
               );
@@ -271,9 +370,24 @@ export default function Template4({ data }: MedicalSlipTemplateProps) {
 
       <div style={{ flex: 1 }} />
 
-      {/* ══════════════ Signatory - name only, signed by hand ══════════════ */}
-      <div style={{ textAlign: "right", marginTop: "18px" }}>
-        <div style={{ height: "30px" }} />
+      {/* ══════════════ Signatory ══════════════ */}
+      <div style={{ textAlign: "right", marginTop: "6px" }}>
+        {text("labSignaturePath") ? (
+          <img
+            src={text("labSignaturePath")}
+            alt="Signature"
+            style={{
+              width: "150px",
+              height: "auto",
+              objectFit: "contain",
+              display: "block",
+              marginLeft: "auto",
+              marginBottom: "2px"
+            }}
+          />
+        ) : (
+          <div style={{ height: "30px" }} />
+        )}
         <div style={{ fontSize: "13px", fontWeight: "bold" }}>{text("labSignatoryName")}</div>
         <div style={{ fontSize: "12px" }}>{text("labSignatoryQualification")}</div>
       </div>
@@ -288,12 +402,24 @@ export default function Template4({ data }: MedicalSlipTemplateProps) {
             fontSize: "12.5px",
             fontWeight: "bold",
             padding: "5px 8px",
-            marginTop: "12px"
+            marginTop: "8px"
           }}
         >
           {text("labDisclaimer")}
         </div>
       ) : null}
     </div>
+  );
+}
+
+export default function Template4({ data }: MedicalSlipTemplateProps) {
+  const pages = splitPages(parseResults(`${data.labResults ?? ""}`));
+
+  return (
+    <>
+      {pages.map((rows, index) => (
+        <ReportPage key={index} data={data} rows={rows} />
+      ))}
+    </>
   );
 }

@@ -134,7 +134,7 @@ export default function Template2({ data }: MedicalSlipTemplateProps) {
           <img
             src={logoPath}
             alt={text("centreName") || "Centre"}
-            style={{ width: "56px", height: "56px", objectFit: "contain", flexShrink: 0 }}
+            style={{ width: "130px", height: "auto", objectFit: "contain", flexShrink: 0 }}
           />
         ) : null}
         <div style={{ flex: 1, minWidth: 0, textAlign: "center" }}>

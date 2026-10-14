@@ -21,6 +21,7 @@ import OfferLetterTemplate1 from "../templates/offer-letter/Template1";
 import OfferLetterTemplate2 from "../templates/offer-letter/Template2";
 import OfferLetterTemplate3 from "../templates/offer-letter/Template3";
 import RelievingLetterTemplate1 from "../templates/relieving-letter/Template1";
+import RelievingLetterTemplate2 from "../templates/relieving-letter/Template2";
 import RolesResponsibilityTemplate1 from "../templates/roles-responsibility/Template1";
 import BillTemplate1 from "../templates/bill/Template1";
 import ContractTemplate1 from "../templates/contract/Template1";
@@ -32,6 +33,7 @@ import UltrasoundReportTemplate1 from "../templates/ultrasound-report/Template1"
 import PrescriptionTemplate1 from "../templates/prescription/Template1";
 import PrescriptionTemplate2 from "../templates/prescription/Template2";
 import ResumeTemplate1 from "../templates/resume/Template1";
+import ResumeTemplate2 from "../templates/resume/Template2";
 import MedicalCertificateTemplate1 from "../templates/medical-certificate/Template1";
 import MedicalCertificateTemplate2 from "../templates/medical-certificate/Template2";
 import MedicalCertificateTemplate3 from "../templates/medical-certificate/Template3";
@@ -40,12 +42,14 @@ import MedicalSlipTemplate2 from "../templates/medical-slip/Template2";
 import MedicalSlipTemplate3 from "../templates/medical-slip/Template3";
 import MedicalSlipTemplate4 from "../templates/medical-slip/Template4";
 import MedicalSlipTemplate5 from "../templates/medical-slip/Template5";
+import MedicalSlipTemplate6 from "../templates/medical-slip/Template6";
+import MedicalSlipTemplate7 from "../templates/medical-slip/Template7";
 
 type EditableDocumentValues = Record<string, string | number>;
 /* Bump this whenever the defaults in mockData change: stored form data is merged
    OVER the defaults, so an existing browser keeps showing its old saved values
-   until the key changes. v21 = updated medical certificate diagnosis. */
-const FORM_DATA_STORAGE_KEY = "document-printer.formData.v37";
+   until the key changes. v50 = Aaditya discharge patient details for Anjum Fatima. */
+const FORM_DATA_STORAGE_KEY = "document-printer.formData.v57";
 const TEMPLATE_STORAGE_KEY = "document-printer.templateSelection.v1";
 const ACTIVE_DOCUMENT_STORAGE_KEY = "document-printer.activeDocument.v1";
 
@@ -229,6 +233,10 @@ export default function HomePage() {
       return <RelievingLetterTemplate1 data={formDataByDocument["relieving-letter"]} />;
     }
 
+    if (selectedDocument === "relieving-letter-2") {
+      return <RelievingLetterTemplate2 data={formDataByDocument["relieving-letter-2"]} />;
+    }
+
     if (selectedDocument === "bill") {
       return <BillTemplate1 data={formDataByDocument["bill"]} />;
     }
@@ -252,6 +260,12 @@ export default function HomePage() {
     }
 
     if (selectedDocument === "medical-slip") {
+      if (activeTemplate === "template7") {
+        return <MedicalSlipTemplate7 data={formDataByDocument["medical-slip"]} />;
+      }
+      if (activeTemplate === "template6") {
+        return <MedicalSlipTemplate6 data={formDataByDocument["medical-slip"]} />;
+      }
       if (activeTemplate === "template5") {
         return <MedicalSlipTemplate5 data={formDataByDocument["medical-slip"]} />;
       }
@@ -269,6 +283,10 @@ export default function HomePage() {
 
     if (selectedDocument === "resume") {
       return <ResumeTemplate1 data={formDataByDocument["resume"]} />;
+    }
+
+    if (selectedDocument === "resume-2") {
+      return <ResumeTemplate2 data={formDataByDocument["resume-2"]} />;
     }
 
     if (selectedDocument === "prescription") {

@@ -76,6 +76,33 @@ export interface RelievingLetterData {
   companyEmail: string;
 }
 
+export interface RelievingLetter2Data {
+  [key: string]: string | number;
+  logoPath: string;
+  companyShortName: string;
+  headerRightLines: string;
+  companyLegalName: string;
+  companyFormerName: string;
+  registeredOffice: string;
+  contactLine: string;
+  letterDate: string;
+  heading: string;
+  salutation: string;
+  employeeName: string;
+  empCode: string;
+  fromDate: string;
+  toDate: string;
+  designation: string;
+  relievedDate: string;
+  pronounSubject: string;
+  pronounPossessive: string;
+  noticeClause: string;
+  closingLine: string;
+  signaturePath: string;
+  signatoryName: string;
+  signatoryTitle: string;
+}
+
 export interface BankStatementData {
   [key: string]: string | number;
   accountHolderName: string;
@@ -426,8 +453,18 @@ export interface MedicalSlipData {
   ipNo: string;
   location: string;
   createdBy: string;
+  paidStampPath: string;
   rowsFirstPage: number;
   rowsPerPage: number;
+  /* Optional further Sale Bills, appended after the first (Template 1) */
+  items2: string;
+  billNo2: string;
+  billDate2: string;
+  printDate2: string;
+  items3: string;
+  billNo3: string;
+  billDate3: string;
+  printDate3: string;
   /* OPD consultation letterhead (Template 3) */
   opdCentreName: string;
   opdCentreAddress: string;
@@ -469,6 +506,7 @@ export interface MedicalSlipData {
   labReportDate: string;
   labSampleNo: string;
   labResults: string;
+  labSignaturePath: string;
   labSignatoryName: string;
   labSignatoryQualification: string;
   labDisclaimer: string;
@@ -489,11 +527,48 @@ export interface MedicalSlipData {
   radFindings: string;
   radAdviceLabel: string;
   radAdvice: string;
+  radImpressionLabel: string;
+  radImpression: string;
   radSignatoryName: string;
   radSignatoryQualification: string;
   radDisclaimer: string;
   radFacilitiesHeading: string;
   radFacilities: string;
+  /* Discharge Summary (Template 6) */
+  dsTitle: string;
+  dsPrintDate: string;
+  dsUhidNo: string;
+  dsIpNo: string;
+  dsAdmitDate: string;
+  dsFatherName: string;
+  dsDoctorName: string;
+  dsSurgeryDate: string;
+  dsDischargeType: string;
+  dsExpDischargeDate: string;
+  dsFinalDiagnosis: string;
+  dsProcedures: string;
+  dsCondition: string;
+  dsInstructions: string;
+  dsMedications: string;
+  dsFollowUp: string;
+  dsHistory: string;
+  dsAckLine: string;
+  /* Pharmacy receipt (Template 7) */
+  msInvocation: string;
+  msStoreName: string;
+  msAddress: string;
+  msTime: string;
+  msGstin: string;
+  msPhone: string;
+  msDlNo: string;
+  msPatientName: string;
+  msBillNo: string;
+  msDoctorName: string;
+  msDate: string;
+  msItems: string;
+  msFooter1: string;
+  msFooter2: string;
+  msFooter3: string;
   /* One line per row: NAME | HSN | CATEGORY | BATCH | EXPIRY | RATE | QTY | GST% | AMOUNT?
      AMOUNT is optional - left blank it is computed as rate x qty x (1 + gst/100). */
   items: string;
@@ -516,6 +591,7 @@ export interface DocumentDataMap {
   "salary-slip": SalarySlipData;
   "offer-letter": OfferLetterData;
   "relieving-letter": RelievingLetterData;
+  "relieving-letter-2": RelievingLetter2Data;
   "bank-statement": BankStatementData;
   "microsoft-sales-chat": MicrosoftSalesChatData;
   "roles-responsibility": RolesResponsibilityData;
@@ -526,6 +602,7 @@ export interface DocumentDataMap {
   "medical-certificate": MedicalCertificateData;
   "medical-slip": MedicalSlipData;
   "resume": ResumeData;
+  "resume-2": ResumeData;
 }
 
 export type DocumentType = keyof DocumentDataMap;
@@ -551,7 +628,9 @@ export interface DynamicField {
 export const documentOptions: SidebarOption[] = [
   { id: "offer-letter", label: "Offer Letter" },
   { id: "relieving-letter", label: "Relieving Letter" },
+  { id: "relieving-letter-2", label: "Relieving Letter 2" },
   { id: "resume", label: "Resume" },
+  { id: "resume-2", label: "Resume 2" },
   { id: "salary-slip", label: "Salary Slip" },
   { id: "bank-statement", label: "Bank Statement" },
   { id: "roles-responsibility", label: "Roles & Responsibility" },
@@ -576,6 +655,7 @@ export const templateRegistry: Record<DocumentType, TemplateMeta[]> = {
     { id: "template3", label: "Template 3 (DATCO)" }
   ],
   "relieving-letter": [{ id: "template1", label: "Template 1" }],
+  "relieving-letter-2": [{ id: "template1", label: "Template 1 (Experience Cum Relieving)" }],
   "bank-statement": [{ id: "template1", label: "Template 1" }],
   "roles-responsibility": [{ id: "template1", label: "Template 1" }],
   "microsoft-sales-chat": [{ id: "template1", label: "Template 1" }],
@@ -596,15 +676,19 @@ export const templateRegistry: Record<DocumentType, TemplateMeta[]> = {
     { id: "template2", label: "Template 2 (Clinical Summary)" },
     { id: "template3", label: "Template 3 (OPD Letterhead)" },
     { id: "template4", label: "Template 4 (Pathology Report)" },
-    { id: "template5", label: "Template 5 (Radiology Report)" }
+    { id: "template5", label: "Template 5 (Radiology Report)" },
+    { id: "template6", label: "Template 6 (Discharge Summary)" },
+    { id: "template7", label: "Template 7 (Pharmacy Receipt)" }
   ],
-  "resume": [{ id: "template1", label: "Template 1" }]
+  "resume": [{ id: "template1", label: "Template 1" }],
+  "resume-2": [{ id: "template1", label: "Template 1 (Single Column)" }]
 };
 
 export const defaultTemplateSelection: Record<DocumentType, string> = {
   "salary-slip": "template1",
   "offer-letter": "template1",
   "relieving-letter": "template1",
+  "relieving-letter-2": "template1",
   "bank-statement": "template1",
   "roles-responsibility": "template1",
   "microsoft-sales-chat": "template1",
@@ -613,8 +697,9 @@ export const defaultTemplateSelection: Record<DocumentType, string> = {
   "ultrasound-report": "template1",
   "prescription": "template1",
   "medical-certificate": "template1",
-  "medical-slip": "template1",
-  "resume": "template1"
+  "medical-slip": "template6",
+  "resume": "template1",
+  "resume-2": "template1"
 };
 
 export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
@@ -689,6 +774,31 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     { key: "letterDate", label: "Letter Date", type: "date" },
     { key: "companyPhone", label: "Company Phone", type: "text" },
     { key: "companyEmail", label: "Company Email", type: "text" }
+  ],
+  "relieving-letter-2": [
+    { key: "companyShortName", label: "Masthead wordmark", type: "text" },
+    { key: "logoPath", label: "Logo path", type: "text" },
+    { key: "headerRightLines", label: "Header right lines (web / social, one per line)", type: "textarea" },
+    { key: "letterDate", label: "Letter Date", type: "text" },
+    { key: "heading", label: "Heading", type: "text" },
+    { key: "salutation", label: "Salutation (Mr. / Ms.)", type: "text" },
+    { key: "employeeName", label: "Employee Name", type: "text" },
+    { key: "empCode", label: "EMP Code", type: "text" },
+    { key: "fromDate", label: "Working from (date)", type: "text" },
+    { key: "toDate", label: "Working to (date)", type: "text" },
+    { key: "designation", label: "Last Designation", type: "text" },
+    { key: "relievedDate", label: "Relieved on (date)", type: "text" },
+    { key: "pronounSubject", label: "Pronoun - subject (He / She)", type: "text" },
+    { key: "pronounPossessive", label: "Pronoun - possessive (His / Her)", type: "text" },
+    { key: "noticeClause", label: "Notice-period clause (paragraph)", type: "textarea" },
+    { key: "closingLine", label: "Closing line", type: "text" },
+    { key: "signatoryName", label: "Signatory Name", type: "text" },
+    { key: "signatoryTitle", label: "Signatory Title", type: "text" },
+    { key: "signaturePath", label: "Signature image path", type: "text" },
+    { key: "companyLegalName", label: "Company legal name", type: "text" },
+    { key: "companyFormerName", label: "Company former name", type: "text" },
+    { key: "registeredOffice", label: "Registered office (footer)", type: "textarea" },
+    { key: "contactLine", label: "Footer contact line", type: "text" }
   ],
   "bank-statement": [
     { key: "bankName", label: "Bank Name", type: "text" },
@@ -961,8 +1071,25 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     { key: "ipNo", label: "IP No", type: "text" },
     { key: "location", label: "Location (ward / room)", type: "text" },
     { key: "createdBy", label: "Created By", type: "text" },
+    { key: "paidStampPath", label: "Paid stamp image path", type: "text" },
     { key: "rowsFirstPage", label: "Item rows on page 1", type: "number" },
     { key: "rowsPerPage", label: "Item rows on later pages", type: "number" },
+    { key: "billNo2", label: "Bill 2: Bill No", type: "text" },
+    { key: "billDate2", label: "Bill 2: Bill Date", type: "text" },
+    { key: "printDate2", label: "Bill 2: Print Date", type: "text" },
+    {
+      key: "items2",
+      label: "Bill 2 items - same format; leave blank for a single bill",
+      type: "textarea"
+    },
+    { key: "billNo3", label: "Bill 3: Bill No", type: "text" },
+    { key: "billDate3", label: "Bill 3: Bill Date", type: "text" },
+    { key: "printDate3", label: "Bill 3: Print Date", type: "text" },
+    {
+      key: "items3",
+      label: "Bill 3 items - same format; leave blank to omit",
+      type: "textarea"
+    },
     /* -- Template 3: OPD letterhead -- */
     { key: "opdCentreName", label: "OPD: Centre Name (Hindi)", type: "text" },
     { key: "opdCentreAddress", label: "OPD: Centre Address (Hindi)", type: "text" },
@@ -1005,10 +1132,12 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     { key: "labSampleNo", label: "LAB: Sample No.", type: "text" },
     {
       key: "labResults",
-      label: "LAB: Results - #Section / >Sub / *Note / NAME | VALUE | UNIT | FLAG | REF",
+      label:
+        "LAB: Results - #Section / >Sub / ^Centred / *Note / === new page / ~NAME|VALUE|NAME|VALUE / NAME | VALUE | UNIT | FLAG | REF",
       type: "textarea"
     },
     { key: "labSignatoryName", label: "LAB: Signatory Name", type: "text" },
+    { key: "labSignaturePath", label: "LAB: Signature image path", type: "text" },
     { key: "labSignatoryQualification", label: "LAB: Signatory Qualification", type: "text" },
     { key: "labDisclaimer", label: "LAB: Footer disclaimer", type: "text" },
     /* -- Template 5: radiology report -- */
@@ -1028,6 +1157,8 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     { key: "radFindings", label: "RAD: Findings (one paragraph per line)", type: "textarea" },
     { key: "radAdviceLabel", label: "RAD: Advice label", type: "text" },
     { key: "radAdvice", label: "RAD: Advice", type: "text" },
+    { key: "radImpressionLabel", label: "RAD: Impression label", type: "text" },
+    { key: "radImpression", label: "RAD: Impression (one bullet per line)", type: "textarea" },
     { key: "radSignatoryName", label: "RAD: Signatory name", type: "text" },
     { key: "radSignatoryQualification", label: "RAD: Signatory qualification", type: "text" },
     { key: "radDisclaimer", label: "RAD: Footer disclaimer banner", type: "text" },
@@ -1037,6 +1168,45 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
       label: "RAD: Facilities - IMAGE | CAPTION | bullet ; bullet ; bullet",
       type: "textarea"
     },
+    /* -- Template 6: discharge summary -- */
+    { key: "dsTitle", label: "DS: Title", type: "text" },
+    { key: "dsPrintDate", label: "DS: Print Date", type: "text" },
+    { key: "dsUhidNo", label: "DS: UHID No", type: "text" },
+    { key: "dsIpNo", label: "DS: IP No", type: "text" },
+    { key: "dsAdmitDate", label: "DS: Admit Date", type: "text" },
+    { key: "dsFatherName", label: "DS: Father", type: "text" },
+    { key: "dsDoctorName", label: "DS: Doctor Name", type: "text" },
+    { key: "dsSurgeryDate", label: "DS: Operation / Surgery Date", type: "text" },
+    { key: "dsDischargeType", label: "DS: Discharge Type", type: "text" },
+    { key: "dsExpDischargeDate", label: "DS: Exp. Discharge Date", type: "text" },
+    { key: "dsFinalDiagnosis", label: "DS: Final Diagnosis", type: "textarea" },
+    { key: "dsProcedures", label: "DS: Procedures", type: "textarea" },
+    { key: "dsCondition", label: "DS: Condition at Discharge", type: "text" },
+    { key: "dsInstructions", label: "DS: Discharge Instructions (one per line)", type: "textarea" },
+    { key: "dsMedications", label: "DS: Discharge Medications (one per line)", type: "textarea" },
+    { key: "dsFollowUp", label: "DS: Follow Up (one per line)", type: "textarea" },
+    { key: "dsHistory", label: "DS: H/O (history, labs, USG)", type: "textarea" },
+    { key: "dsAckLine", label: "DS: Acknowledgement line", type: "text" },
+    /* -- Template 7: pharmacy receipt -- */
+    { key: "msInvocation", label: "RX: Invocation line", type: "text" },
+    { key: "msStoreName", label: "RX: Store Name", type: "text" },
+    { key: "msAddress", label: "RX: Address", type: "text" },
+    { key: "msTime", label: "RX: Time", type: "text" },
+    { key: "msGstin", label: "RX: GSTIN", type: "text" },
+    { key: "msPhone", label: "RX: Phone", type: "text" },
+    { key: "msDlNo", label: "RX: DL No", type: "text" },
+    { key: "msPatientName", label: "RX: Patient Name", type: "text" },
+    { key: "msBillNo", label: "RX: Bill No", type: "text" },
+    { key: "msDoctorName", label: "RX: Doctor Name", type: "text" },
+    { key: "msDate", label: "RX: Date", type: "text" },
+    {
+      key: "msItems",
+      label: "RX: Items - NAME | PACK | BATCH | EXP | QTY | MRP | AMOUNT",
+      type: "textarea"
+    },
+    { key: "msFooter1", label: "RX: Footer line 1", type: "text" },
+    { key: "msFooter2", label: "RX: Footer line 2 (gets Signature)", type: "text" },
+    { key: "msFooter3", label: "RX: Footer line 3", type: "text" },
     { key: "pageLabel", label: "Page Label format ({n} of {m})", type: "text" },
     {
       key: "items",
@@ -1116,6 +1286,42 @@ export const formFieldRegistry: Record<DocumentType, DynamicField[]> = {
     { key: "lang3Name", label: "Language 3 – Name", type: "text" },
     { key: "lang3Level", label: "Language 3 – Level", type: "text" },
     { key: "lang3Rating", label: "Language 3 – Rating (0–5)", type: "number" }
+  ],
+  "resume-2": [
+    { key: "fullName", label: "Full Name", type: "text" },
+    { key: "location", label: "Location", type: "text" },
+    { key: "email", label: "Email", type: "text" },
+    { key: "phone", label: "Phone", type: "text" },
+    { key: "linkedin", label: "LinkedIn / Website", type: "text" },
+    { key: "summary", label: "Professional Summary", type: "textarea" },
+    { key: "exp1Title", label: "Experience 1 – Job Title", type: "text" },
+    { key: "exp1Company", label: "Experience 1 – Company", type: "text" },
+    { key: "exp1Period", label: "Experience 1 – Period", type: "text" },
+    { key: "exp1Location", label: "Experience 1 – Location", type: "text" },
+    { key: "exp1Details", label: "Experience 1 – Bullets (one per line)", type: "textarea" },
+    { key: "exp2Title", label: "Experience 2 – Job Title", type: "text" },
+    { key: "exp2Company", label: "Experience 2 – Company", type: "text" },
+    { key: "exp2Period", label: "Experience 2 – Period", type: "text" },
+    { key: "exp2Location", label: "Experience 2 – Location", type: "text" },
+    { key: "exp2Details", label: "Experience 2 – Bullets (one per line)", type: "textarea" },
+    { key: "exp3Title", label: "Experience 3 – Job Title", type: "text" },
+    { key: "exp3Company", label: "Experience 3 – Company", type: "text" },
+    { key: "exp3Period", label: "Experience 3 – Period", type: "text" },
+    { key: "exp3Location", label: "Experience 3 – Location", type: "text" },
+    { key: "exp3Details", label: "Experience 3 – Bullets (one per line)", type: "textarea" },
+    { key: "edu1Degree", label: "Education 1 – Degree", type: "text" },
+    { key: "edu1Institution", label: "Education 1 – Institution", type: "text" },
+    { key: "edu1Period", label: "Education 1 – Period", type: "text" },
+    { key: "edu1Location", label: "Education 1 – Subtitle / Location", type: "text" },
+    { key: "edu2Degree", label: "Education 2 – Degree", type: "text" },
+    { key: "edu2Institution", label: "Education 2 – Institution", type: "text" },
+    { key: "edu2Period", label: "Education 2 – Period", type: "text" },
+    { key: "edu2Location", label: "Education 2 – Subtitle / Location", type: "text" },
+    {
+      key: "skills",
+      label: "Skills - one per line, 'Label: items' bolds the label",
+      type: "textarea"
+    }
   ]
 };
 
@@ -1191,6 +1397,35 @@ export const mockData: DocumentDataMap = {
     letterDate: "2025-12-15",
     companyPhone: "9446144967 / 7994282695",
     companyEmail: "davisvibin@gmail.com"
+  },
+  "relieving-letter-2": {
+    logoPath: "/images/logos/teleperformance-tp.png",
+    companyShortName: "Teleperformance",
+    headerRightLines:
+      "teleperformance.in\nlinkedin.com/company/teleperformance\ntwitter.com//TPIndiaOfficial\nfacebook.com//TPIndiaOfficial",
+    companyLegalName: "Teleperformance Global Business Private Limited",
+    companyFormerName: "(Formerly known as CRM Services India Private Limited)",
+    registeredOffice:
+      "Registered Office: Teleperformance Towers, Plot CST No.1406-A/28, Mindspace, Goregaon- West, Mumbai - 400104, Maharashtra, India",
+    contactLine:
+      "Tel: +91-22-66776000 | Fax: +91-22-66776010 | CIN: U72900MH2001PTC395416 | Email: contactus@teleperformance.com",
+    letterDate: "May 28, 2024",
+    heading: "TO WHOMSOEVER IT MAY CONCERN",
+    salutation: "Mr.",
+    employeeName: "Md Asif",
+    empCode: "100000000644068",
+    fromDate: "May 23, 2022",
+    toDate: "May 05, 2024",
+    designation: "Customer Service Associate- Voice",
+    relievedDate: "May 05, 2024",
+    pronounSubject: "He",
+    pronounPossessive: "His",
+    noticeClause:
+      "This is to highlight that Mr. Md Asif did not serve the complete notice period however has cleared his dues as per Terms & Conditions of the employment.",
+    closingLine: "We wish him all the best in all his future endeavors.",
+    signaturePath: "/images/logos/alpana-signature.png",
+    signatoryName: "Alpana Suneja",
+    signatoryTitle: "Senior Vice President- Human Resources"
   },
   "bank-statement": {
     bankName: "Axis Federal Bank",
@@ -1498,9 +1733,20 @@ export const mockData: DocumentDataMap = {
     ipNo: "IP-00000000531",
     location: "2F/Private Room/PVT 07/1",
     createdBy: "Mr Sanjay Singh",
+    paidStampPath: "/images/logos/paid-stamp.png",
     pageLabel: "Page {n} of {m}",
     rowsFirstPage: 29,
     rowsPerPage: 33,
+    billNo2: "SB-4284",
+    billDate2: "19-Aug-2026 03:15 PM",
+    printDate2: "19-Aug-2026 03:16 PM",
+    items2:
+      "TAZOMAC 4.5g | 300412 | INJECTION | LTC2305A | 28 Oct 2027 | 235.90 | 2.00 | 12.00\nMIKACIN 500MG | 300400 | INJECTION | TAA52320A | 28 Jan 2028 | 113.00 | 2.00 | 0.00\nN.S 100 | 300412 | IVF | NSF23056 | 28 Dec 2027 | 17.50 | 2.00 | 12.00\nDISPO 20ML | 300412 | SYRING | G221020753 | 28 Jan 2028 | 22.32 | 2.00 | 12.00\nNEEDLE | 300412 | SURGICAL | 51212R | 28 Nov 2027 | 1.79 | 2.00 | 12.00",
+    billNo3: "SB-4313",
+    billDate3: "20-Aug-2026 09:56 AM",
+    printDate3: "20-Aug-2026 09:56 AM",
+    items3:
+      "SENSICLAV 1.2 G | 300400 | INJECTION | G36243 | 28 Jan 2028 | 157.00 | 2.00 | 0.00\nMIKACIN 500MG | 300400 | INJECTION | TAA52320A | 28 Jan 2028 | 113.00 | 2.00 | 0.00\nDISPO 20ML | 300412 | SYRING | G221020753 | 28 Jan 2027 | 22.32 | 2.00 | 12.00\nDULCOLEX | 300400 | SUPPOSITORY | T204325 | 28 Oct 2027 | 35.20 | 4.00 | 0.00",
     opdCentreName: "आदित्य यूरोलाजी सेन्टर एण्ड मैटरनिटी होम",
     opdCentreAddress: "१० नं0 बोरिंग बनकटवा रोड , गोरखनाथ , गोरखपुर",
     opdCentreMobile: "मो :- 9956390836, 8354885346",
@@ -1545,8 +1791,9 @@ export const mockData: DocumentDataMap = {
     labReportDate: "19/08/26",
     labSampleNo: "A-36/11 /Lab Sample",
     labResults:
-      "# HAEMATOLOGY\nHaemoglobin | 13.5 | Gm% |  | 12 - 18 Gm%\nTotal Leukocyte Count | 11200 | /Cumm | H | 4000 - 11000 /Cumm\n> Diff. Leukoctyte Count\n- Neutrophils | 76 | % | H | 40 - 75 %\n- Lymphocytes | 19 | % | L | 20 - 45 %\n- Monocytes | 01 | % |  | 1 - 10 %\n- Eosinophils | 04 | % |  | 1 - 8 %\n- Basophils | 00 | % |  | 0 - 1 %\nPlatelet Count | 1.18 | lac/cumm. | L | 1.5 - 4 lac/cumm.\nBleeding Time | 1 min. 56 sec |  |  | 2 - 7 min.\nCoagulation Time | 6 min. 40 sec |  |  | 5 - 11 min.\n> Blood Group\n- ABO Group | \"B\"\n- Rh Group | \"POSITIVE\"\n# SEROLOGY\nHIV Screening Test | \"NEGATIVE\"\n* (Note-Please confirm test by Western-Blot technique.)\nAustralia Antigen (HBS-Ag) | \"NEGATIVE\"\nHCV Antibody in serum | \"NEGATIVE\"\n# BLOOD CHEMISTRY\n> Serum Glucose\n- (Random) | 81.5 | mg% |  | 60 - 160 mg%\n- Urine Sugar | NIL\nSerum Urea | 30.6 | mg% |  | 13 - 45 mg%\nS. Creatinine | 1.16 | mg% |  | 0.6 - 1.3 mg%",
+      "# HAEMATOLOGY\nHaemoglobin | 8.2 | Gm% | L | 12 - 18\nRBC Count | 3.4 | mill/cumm | L | 3.8 - 4.8\nHaematocrit (PCV) | 26 | % | L | 36 - 46\nMCV | 68 | fL | L | 80 - 100\nMCH | 22 | pg | L | 27 - 33\nMCHC | 29 | g/dL | L | 32 - 36\nRDW | 17.5 | % | H | 11.5 - 14.5\nTotal Leukocyte Count | 7,800 | /Cumm |  | 4000 - 11000\n> Diff. Leukocyte Count\n- Neutrophils | 60 | % |  | 40 - 75\n- Lymphocytes | 32 | % |  | 20 - 45\n- Monocytes | 04 | % |  | 1 - 10\n- Eosinophils | 03 | % |  | 1 - 8\n- Basophils | 01 | % |  | 0 - 1\nPlatelet Count | 4.3 | lac/cumm | H | 1.5 - 4\nReticulocyte Count | 0.8 | % |  | 0.5 - 2.5\nBleeding Time | 3 min 10 sec |  |  | 2 - 7 min\nCoagulation Time | 7 min 20 sec |  |  | 5 - 11 min\n> Blood Group\n- ABO Group | \"B\"\n- Rh Group | \"Positive\"\n===\n# BLOOD CHEMISTRY\nSerum Glucose (Random) | 88 | mg% |  | 60 - 160\nSerum Urea | 24 | mg% |  | 13 - 45\nS. Creatinine | 0.8 | mg% |  | 0.6 - 1.3\nS. Bilirubin (Total) | 0.6 | mg% |  | 0.2 - 1\nSGPT | 22 | U/L |  | 6 - 40\nSGOT | 20 | U/L |  | 8 - 37\nPT (Test) / INR | 3.4 / 1.0 | sec |  | INR ~1.0\n# IRON STUDIES\nSerum Iron | 28 | µg/dL | L | 37 - 145\nTIBC | 460 | µg/dL | H | 250 - 400\nTransferrin Saturation | 6 | % | L | 15 - 45\nSerum Ferritin | 6 | ng/mL | L | 12 - 150",
     labSignatoryName: "DR. MANGLESH K. SRIVASTAVA",
+    labSignaturePath: "/images/logos/shri-sai-signature.png",
     labSignatoryQualification: "M.D PATH",
     labDisclaimer:
       "This report is not valid for medico-legal purpose, In case of any discrepancy kindly do not hesitate in asking for a review.",
@@ -1555,22 +1802,62 @@ export const mockData: DocumentDataMap = {
     radCentreName: "KT MRI & CT Scan Center",
     radTagline: "Our emphasis, excellence in diagnosis",
     radTaglineHindi: "हमारी प्राथमिकता, निदान में गुणवत्ता",
-    radAddress: "Opposite Vet. Bhadur Singh Sports College\nKhajanchi Bargadwa By-Pass Road\nGorakhpur-273003\nPh. Reception :  8417000900\nPh. Manager :  8417000898\nPh. Directors :  9415212566, 9415211286\nE-mail : knspl.gkp@gmail.com",
+    radAddress: "Opposite Veer Bhadur Singh Sports College\nKhajanchi Bargadwa By-Pass Road\nGorakhpur-273003\nPh. Reception :  8417000900\nPh. Manager :  8417000898\nPh. Directors :  9415212566, 9415211286\nE-mail : knspl.gkp@gmail.com",
     radReportLabel: "REPORT",
-    radIdNo: "X/04-07-06",
-    radReportDate: "August 19, 2026",
+    radIdNo: "UX2231222",
+    radReportDate: "24 July 2026",
     radPatientName: "MRS. ANJUM FATIMA",
-    radAgeSex: "AGE/SEX 42 Y/F",
-    radRefBy: "Dr. D. P. SINGH, MS",
+    radAgeSex: "AGE/SEX 42Y/F",
+    radRefBy: "DR.ONKAR RAI (M.D.MED.)",
     radStudyTitle: "X-RAY KUB",
     radFindings: "Suboptimal study due to poor bowel preparation.\nA radio-opaque shadow measuring approx 13 mm noted around left transverse process of L3 vertebrae ? Proximal ureteric calculus.\nAnother Radio-opaque shadow measuring approx 15 mm noted in midline in lower pelvic region superior to pubic symphysis concerning for urethral calculus.\nLumbo-sacral spine and pelvis appear normal.\nParaspinal soft tissues are normal.\nBilateral sacroiliac and hip joints are visualized normally.",
     radAdviceLabel: "ADV",
     radAdvice: "CLINICAL CORRELATION & CT KUB for further evaluation.",
+    radImpressionLabel: "IMPRESSION",
+    radImpression:
+      "",
     radSignatoryName: "Dr. Piyush Srivastava",
     radSignatoryQualification: "D.M.R.D.(Radiodiagnosis)",
     radDisclaimer: "THIS REPORT IS NOT FOR MEDICO LEGAL PURPOSE",
     radFacilitiesHeading: "उपलब्ध सुविधाएं",
     radFacilities: " | Siemens C.T. Scan | CT Scan मस्तिष्क, पेट, सीना आदि ; CT Angiography ; Digital X-ray\n | Philips 1.5 T MRI | MRI Scan ; 4D Colour Dopler ; CT/USG Guded Biopsy/FNAC\n | Siemens Accuson S 2000 | ECG, ECO Cardiography ; Dr. Lal Path Lab ; 24 H Ambulance\n | Siemens X-Ray | ",
+    dsTitle: "DISCHARGE SUMMARY",
+    dsPrintDate: "17-Jul-2023 02:42 PM",
+    dsUhidNo: "UD-00012345678",
+    dsIpNo: "IP-00000000531",
+    dsAdmitDate: "12 Jul 2023 7:22 PM",
+    dsFatherName: "W/o Mr. Imran Ahmed",
+    dsDoctorName: "Dr. Arvind Tiwari",
+    dsSurgeryDate: "13/7/23",
+    dsDischargeType: "Normal",
+    dsExpDischargeDate: "17/07/23",
+    dsFinalDiagnosis:
+      "PROSTATIC URETHRAL CALCULUS WITH LEFT UPPER URETERIC STONE WITH GRADE IV HYDRONEPHROSIS WITH POOR FUNCTIONING KIDNEY.",
+    dsProcedures:
+      "LARGE 2 CM PROSTATIC URETHRAL CALCULUS WITH LEFT UPPER URETRIC STONE.\nCLT & LEFT URSL DONE. BUT STONE CLEARENCE NOT GETTING SO LEFT MID POSTERIOR CALYX PUNCTURE DONE. VISIBLE STONES REMOVED. LEFT DJ STENT PASSED.\nCLT + (L) PCNL - 13/07/23",
+    dsCondition: "SATISFACTORY",
+    dsInstructions: "TAKE REST\nEAT SOFT DIET / BLAND DIET\nAVOID CONSTIPATION",
+    dsMedications: "1 - TAB - LMF-FORT - 625 - MG - 1 BD X 7 DAYS\n2 - TAB - L-CIN - 500 - MG - 1 OD X 10 DAYS\n3 - CAP - SOMPRAZ-D - 1 OD X 10 DAYS\n4 - CAP - BECASULE - 1 OD X 10 DAYS\n5 - TAB - SILOSURE-SF - 1 HS X 10 DAYS\n6 - TAB - SUMO - 1 BD - SOS / USE FOR PAIN\n7 - SYP - LACZOOM - 20 ML - HS - SOS / USE FOR CONSTIPATION",
+    dsFollowUp: "REVIEW AFTER 10 DAYS\nDJ STENT REMOVAL AFTER 3 WEEKS",
+    dsHistory: "11/07/2023\nHB- 13.4 GM% TLC - 11200/CUMM DLC N- 76% L-19% M-01 % E-04% B-00%, BLOOD GROUP-\"B\" POSITIVE, HIV-NEGATIVE, HBS Ag-NEGATIVE, HCV-NEGATIVE, S-GLUCOSE-81.5 MG%, S-CRETININE-1.16 MG%, URINE SUGAR-NIL, S-UREA-30.6 MG%, S-BILIRUBIN-0.99 MG%, SGPT-44.5 U/L, SGOT-38.2 U/L.\nUSG REPORT - 03/07/2023\nIMPRESSION - 1 - MILD HEPATOMEGALY WITH GRADE I FATTY CHANGES IN LIVER & INFLAMMATORY BOWEL PATHOLOGY.\n2 - RIGHT KIDNEY IS TOWARDS UPPER NORMAL LIMITS IN MEASUREMENT AND SHOWS SLIGHTLY VARIATED CORTICAL ECHOTEXTURE WITH PERSISTENT MINIMAL PC FULLNESS POSSIBLY WITH EARLY LOBULATIONS. PLEASE R/O NEPHRITIS.\n3 - ENLARGED GROSSLY HYDRONEPHROTIC LT KIDNEY WITH REDUCED PARENCHYMAL WIDTH (6.8MM) WITH UPPER URETEROLITHIASIS (14.5 X 3.5) MM.\n4 - PROSTATIC URETHRA SHOWS (8.5 X 6) MM 2 HYPERECHOIC AREA WITH SHADOWING AND TWINKLING ARTIFACT ON CD. FINDINGS S/O PROSTATIC URETHRAL STONE.",
+    dsAckLine:
+      "I/We have been explained the medications and precautions required for my patient in detail by the attending nursing staff.",
+    msInvocation: "SHRI GANESHAYA NAMAH",
+    msStoreName: "ADITYA MEDICAL STORE",
+    msAddress: "BORINNO,10,BANKATVA ROAD,",
+    msTime: "20:12",
+    msGstin: "09ADTPT6997K1Z2",
+    msPhone: "9569865981",
+    msDlNo: "UP53200000542 & UP53210000542",
+    msPatientName: "MR. ASHISH VERMA",
+    msBillNo: "A011689",
+    msDoctorName: "SUMA RAMAKRISHNA",
+    msDate: "20/08/2026",
+    msItems:
+      "LINA-DOSE-D-10 |  | LGQ01/253/20 | 12/27 | 10 | 234.37 | 2343.70\nKETODILA SOAP |  | EA26003 | 12/27 | 5 | 88.09 | 440.45\nYAXODERMA DUSTING POWDER |  | CL26021A | 02/28 | 4 | 159.00 | 636.00\nGLICOSUM-1 |  | ABTSA06 | 11/27 | 10 | 42.00 | 420.00\nCALCIQUICK-D3 60K |  | ALD6164 | 03/28 | 3 | 131.54 | 394.62\nATORVANEED ASP 75/10 |  | DCG06001 | 05/28 | 10 | 78.00 | 780.00\nVITAMIN-C CHEWABLE TABLETS 500MG |  | LIA26061 | 02/28 | 7 | 24.68 | 172.76\nVOLTEND M 0.3 |  | VAM250101 | 12/26 | 29 | 185.00 | 5365.00\nKAPIVA SHILAJIT GOLD RESIN 20g |  | KSGA-109 | 05/28 | 2 | 1549.00 | 3098.00",
+    msFooter1: "1-SUBJECT TO GORAKHPUR JURISDICTION ONLY",
+    msFooter2: "2-PLEASE VERIFY MEDICINE FROM PRESCRIPTION",
+    msFooter3: "3-NO RETURN,NO EXCHANGE",
     items:
       "5% DEXT | 300412 | IVF | DAF22185 | 28 Aug 2028 | 33.04 | 1.00 | 12.00\nD N S | 300412 | IVF | DSAF23100 | 28 Sep 2027 | 34.02 | 1.00 | 12.00\nN.S 500 | 300412 | IVF | NSF23023 | 28 Jun 2028 | 31.07 | 1.00 | 12.00\nR.L | 300412 | IVF | RLPF23054 | 28 Dec 2027 | 50.36 | 4.00 | 12.00\nSUMOL IV 100ML | 300412 | IVF | ABZ1002 | 28 Jul 2027 | 294.64 | 1.00 | 12.00\nPERINORAM 2ML | 300400 | INJECTION | GE273006 | 28 Jan 2027 | 5.96 | 1.00 | 0.00\nTROPIN | 300405 | INJECTION | KMO38072 | 28 Dec 2027 | 4.08 | 1.00 | 5.00\nLICOLET/PYROLET | 300412 | INJECTION | P22S113 | 28 Sep 2028 | 13.61 | 1.00 | 12.00\nBUTADOL 2ML | 300412 | INJECTION | KP095025 | 28 May 2027 | 72.14 | 1.00 | 12.00\nMYE PYROLATE 5ML | 300412 | INJECTION | P24161 | 28 Jan 2027 | 77.14 | 2.00 | 12.00\nMEZOLAM VAIL | 300412 | INJECTION | M90511 | 28 Oct 2028 | 29.46 | 1.00 | 12.00\nTRAMAZAC | 300412 | INJECTION | HG125 | 28 Feb 2028 | 21.02 | 1.00 | 12.00\nDYNAPAR | 300400 | INJECTION | D122S122 | 28 Sep 2027 | 33.46 | 1.00 | 0.00\nLASIX 2ML | 300400 | INJECTION | 2123062 | 28 Jun 2027 | 11.96 | 1.00 | 0.00\nTRENEXA/TEXAKIND | 300400 | INJECTION | TNA2242 | 28 Feb 2028 | 64.20 | 2.00 | 0.00\nDEXONA 2ML | 300400 | INJECTION | WAO2132 | 28 May 2028 | 11.57 | 1.00 | 0.00\nEMESET 4ML | 300412 | INJECTION | JHH155 | 28 Jul 2028 | 25.95 | 1.00 | 12.00\nIV SET | 300412 | IVF | G130120906 | 28 Mar 2028 | 290.18 | 1.00 | 12.00\nUROBAG | 300405 | SURGICAL | G230450527 | 28 Jul 2027 | 300.95 | 2.00 | 5.00\nB P BLADE | 300412 | SURGICAL | FTVYTFR7T | 28 Aug 2027 | 4.46 | 1.00 | 12.00\nCRANIOTOMY DROP | 300412 | SURGICAL | 2210DD0 | 28 Jun 2028 | 802.00 | 1.00 | 0.00\nABGEL | 300400 | SURGICAL | 111622 | 28 Aug 2027 | 92.86 | 1.00 | 12.00\nNYLUS 2-0 CUT | 300412 | SUTURE | LB2306 | 28 Sep 2027 | 166.07 | 1.00 | 12.00\nLOX2% ADRELINE | 300412 | INJECTION | SU1478187 | 28 Feb 2028 | 30.04 | 1.00 | 12.00\nANIWIN 0.5% VAIL | 300412 | INJECTION | B12573 | 28 Apr 2027 | 83.56 | 1.00 | 12.00\nD J STENT | 300412 | SURGICAL | 2023240176 | 28 Dec 2028 | 705.36 | 1.00 | 12.00\nCALIGNO JELLY | 300412 | GEL | XT-257 | 28 Sep 2028 | 30.27 | 1.00 | 12.00\nE.C.G ELECOTRADE | 300412 | SURGICAL | ETSN278 | 28 Dec 2028 | 24.11 | 3.00 | 12.00\nD-WATER 5ML | 300412 | LIQUID | 2225287 | 28 Nov 2028 | 2.57 | 6.00 | 12.00\nENDOCATRACHE TUBE | 300412 | SURGICAL | B202331 | 28 May 2028 | 291.07 | 4.00 | 12.00\nSUCTION CATH 14,16 NO | 300412 | SURGICAL | G221011049 | 28 Oct 2027 | 71.43 | 1.00 | 12.00\nGLOVES ROMSONS | 300412 | SURGICAL | 1322036 | 28 Dec 2028 | 62.50 | 6.00 | 12.00\nDISPO 10ML | 300412 | SYRING | 22K19K60 | 28 Dec 2028 | 22.32 | 3.00 | 12.00\nDISPO 5ML | 300412 | SYRING | G221120729 | 28 Jun 2027 | 8.35 | 3.00 | 12.00\nDISPO 3ML | 300412 | SYRING | G230220618 | 28 Jun 2027 | 7.14 | 3.00 | 12.00\nDISPO 20ML | 300412 | SYRING | G221020753 | 28 Jan 2028 | 22.32 | 1.00 | 12.00\nN.S 3LTR | 300412 | IVF | SIL30727 | 28 Mar 2028 | 531.25 | 4.00 | 12.00\nFOLICY16,18,14,20,12 | 300412 | SURGICAL | 817A1010 | 28 Nov 2027 | 297.32 | 3.00 | 12.00\nFORTWIN | 300412 | INJECTION | TAZ23011 | 28 Aug 2028 | 35.65 | 1.00 | 12.00\nFENTANYL | 300412 | INJECTION | T140512T | 28 Jan 2027 | 45.23 | 1.00 | 12.00\nNEOROF 1 | 300412 | INJECTION | T236897 | 28 Nov 2027 | 160.09 | 1.00 | 12.00\nNEOVAC 4MG | 300405 | INJECTION | KLKL4545 | 28 Aug 2027 | 86.19 | 1.00 | 5.00\nSENSICLAV 1.2 G | 300400 | INJECTION | G36243 | 28 Nov 2027 | 157.00 | 2.00 | 0.00\nTETVAC | 300405 | INJECTION | A0153822 | 28 Jun 2027 | 12.04 | 1.00 | 5.00\nNOZIA | 300400 | INJECTION | CJY1028 | 28 Mar 2027 | 60.60 | 1.00 | 0.00\nTRENEXA/TEXAKIND | 300400 | INJECTION | TNA2245 | 28 Nov 2028 | 64.20 | 2.00 | 0.00\nR.L | 300412 | IVF | RLPF23054 | 28 Feb 2027 | 50.36 | 1.00 | 12.00\nVIGGO | 300412 | SURGICAL | G22110752 | 28 Feb 2027 | 223.21 | 1.00 | 12.00\nEASYFIX | 300412 | SURGICAL | IVME06-042 | 28 Oct 2027 | 53.57 | 1.00 | 12.00\nDISPO 20ML | 300412 | SYRING | G23511094 | 28 May 2028 | 23.21 | 2.00 | 12.00\nENEMA | 300412 | LIQUID | SPE-57 | 28 Sep 2027 | 42.86 | 1.00 | 12.00\nSAFTYREZAR BLADE | 300400 | CONSUMABLE | G230110021 | 28 Feb 2027 | 36.50 | 1.00 | 0.00\nDISPO 3ML | 300412 | SYRING | G230220618 | 28 May 2028 | 7.14 | 4.00 | 12.00\nIV SET | 300412 | IVF | G230420824 | 28 Mar 2028 | 290.18 | 1.00 | 12.00\nCRANIOTOMY DROP | 300400 | SURGICAL | 2305AB0 | 28 Apr 2028 | 802.00 | 1.00 | 0.00\nGUIDE WIRE | 300400 | SURGICAL | 221011V | 28 Jun 2028 | 2226.00 | 1.00 | 0.00\nSPINAL NEEDIL | 300412 | SURGICAL | 2204016 | 28 May 2028 | 191.96 | 1.00 | 12.00\nTAZOMAC 4.5g | 300412 | INJECTION | LTC2305A | 28 Jan 2028 | 235.90 | 1.00 | 12.00\nN.S 100 | 300412 | IVF | NSF23056 | 28 Mar 2028 | 17.50 | 1.00 | 12.00\nDISPO 20ML | 300412 | SYRING | 320202NJH1 | 28 Jan 2028 | 22.32 | 1.00 | 12.00\nABGEL | 300412 | SURGICAL | 1116222 | 28 Jun 2027 | 92.86 | 1.00 | 12.00\nE.C.G ELECOTRADE | 300412 | SURGICAL | ETSN278-12 | 28 Jun 2028 | 24.11 | 1.00 | 12.00"
   },
@@ -1643,5 +1930,47 @@ export const mockData: DocumentDataMap = {
     lang3Name: "Hindi",
     lang3Level: "Intermediate",
     lang3Rating: 3
+  },
+  "resume-2": {
+    fullName: "Charles Bloomberg",
+    jobTitle: "",
+    phone: "(621) 799-5548",
+    email: "charlesbloomberg@gmail.com",
+    location: "Seoul, South Korea",
+    linkedin: "in/cbloomberg",
+    summary:
+      "Passion for building inspiring companies through industry-leading tech, design, and execution. An experienced early-stage global executive with an economics degree from the University of Wisconsin - Madison. Looking to join as a global startup consultant.",
+    skills:
+      "Leadership: Speaking, Fundraising, Product Development, Communication, Partnerships, International Marketing\nFront End: HTML, CSS, Bootstrap, Webflow\nFields of Interest: Early-Stage Fundraising, Global Entrepreneurship, Web Design, Growth",
+    exp1Title: "CEO & Founder",
+    exp1Company: "Rezi",
+    exp1Period: "August 2015 - Present",
+    exp1Location: "Seoul, South Korea",
+    exp1Details:
+      "Built Rezi - the most loved resume software in the world, trusted by over 2,227,254 users.\nFounded Rezi at the age of 22. At 23, successfully globalized into South Korea growing to be South Korea's leading English resume company, the most awarded global startup in South Korea, and securing over $650,000 in investment, grants, and awards.\nCollaborated with the development team to engineer scalable partnership strategies such as redemption-code-based access which resulted in over 50,000 new users in 1 month with zero marketing dollars spent.\nAccountable for developing new business models as a response towards market conditions and opportunities which resulted in the development of 3 new core departments including e-learning, global recruiting, and data-vending.\n13 full time employees; 2,227,254 users; $650,000 total raised investment; $40,000,000 valuation.",
+    exp2Title: "Web Developer",
+    exp2Company: "Kaplan",
+    exp2Period: "May 2015 - November 2015",
+    exp2Location: "La Crosse, WI",
+    exp2Details:
+      "Executed website redesign of kaplancleantech.com using Expression Engine as a CMS while working with marketing and sales teams. Optimized 3 landing page variants using HTML, A/B testing software and customer feedback to increase leads for sales teams.\nLead the developing SEO strategies monitoring campaigns using MOZ Analytics for a 500k budget. Maintained performance through site analysis, and new keyword research. Prepared analytics and ranking reports presented to management.\nExecuted Google Analytics tracking campaigns to maximize the effectiveness of 5 email re-marketing initiatives deployed using Salesforce software. Used Salesforce Object Query Language, C, and Python to search for data for specific information.",
+    exp3Title: "Marketing Analyst",
+    exp3Company: "Kaplan",
+    exp3Period: "November 2014 - May 2015",
+    exp3Location: "La Crosse, WI",
+    exp3Details:
+      "Relied and implement Tableau dashboards to track 6 marketing KPIs. Used data to create reports circulated amongst leadership. Collaborated with marketing specialists to improve marketing strategies to maximize ROI such as introducing Facebook retargeting.\nUsed SurveyMonkey to collect over 100 customer feedbacks used to conduct analysis, identify market trends, and calculate NPS. Used customer feedback data and optimization software to present and suggest website improvements to management.\nManaged mobile 2 PPC strategy efforts, using Google AdWords Editor and Marin, by teaching marketing specialists best practices to prepare for the behavioral shift towards increased reliance on mobile.",
+    ach1Title: "", ach1Text: "", ach2Title: "", ach2Text: "",
+    ach3Title: "", ach3Text: "", ach4Title: "", ach4Text: "",
+    edu1Degree: "Bachelor of Science in Economics",
+    edu1Institution: "University of Wisconsin - Madison",
+    edu1Period: "Powers-Knapp Scholar, 2014",
+    edu1Location: "",
+    edu2Degree: "", edu2Institution: "", edu2Period: "", edu2Location: "",
+    course1Title: "", course1Text: "", course2Title: "", course2Text: "",
+    int1Title: "", int1Text: "", int2Title: "", int2Text: "",
+    lang1Name: "", lang1Level: "", lang1Rating: 0,
+    lang2Name: "", lang2Level: "", lang2Rating: 0,
+    lang3Name: "", lang3Level: "", lang3Rating: 0
   }
 };

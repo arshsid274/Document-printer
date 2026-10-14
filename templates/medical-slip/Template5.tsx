@@ -67,7 +67,7 @@ export default function Template5({ data }: MedicalSlipTemplateProps) {
     background: "#fff",
     color: "#111",
     fontFamily: SANS,
-    padding: "7mm 8mm 6mm"
+    padding: "8mm 8mm 7mm"
   };
 
   const hi: React.CSSProperties = { fontFamily: DEVANAGARI };
@@ -88,7 +88,7 @@ export default function Template5({ data }: MedicalSlipTemplateProps) {
             <img
               src={logoPath}
               alt={text("radCentreName") || "Diagnostic centre"}
-              style={{ width: "100%", maxHeight: "84px", objectFit: "contain", objectPosition: "left top" }}
+              style={{ width: "100%", maxHeight: "150px", objectFit: "contain", objectPosition: "left top" }}
             />
           ) : null}
           {text("radTagline") ? (
@@ -208,6 +208,38 @@ export default function Template5({ data }: MedicalSlipTemplateProps) {
             <div key={index} style={{ height: "8px" }} />
           )
         )}
+
+        {lines("radImpression").filter(Boolean).length > 0 ? (
+          <div style={{ marginTop: "18px" }}>
+            <p
+              style={{
+                margin: "0 0 8px",
+                fontSize: "15px",
+                fontWeight: "bold",
+                textDecoration: "underline"
+              }}
+            >
+              {text("radImpressionLabel") || "IMPRESSION"}
+            </p>
+            <ul style={{ margin: 0, paddingLeft: "34px" }}>
+              {lines("radImpression")
+                .filter(Boolean)
+                .map((point, index) => (
+                  <li
+                    key={index}
+                    style={{
+                      margin: "0 0 6px",
+                      fontSize: "13px",
+                      fontWeight: "bold",
+                      lineHeight: 1.45
+                    }}
+                  >
+                    {point}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        ) : null}
 
         {text("radAdvice") ? (
           <p style={{ margin: "18px 0 0", fontSize: "13px", lineHeight: 1.5 }}>
